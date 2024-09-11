@@ -1,0 +1,24 @@
+html {
+    background: rgba(175,255,93,0.64);
+}
+
+body {
+    margin: 25px;
+}
+
+dl {
+    clear: both;
+    overflow: hidden;
+    margin: 0.5em 0;
+}
+
+dt {
+    float: left;
+    font-weight: bold;
+    width: 130px;
+}
+
+dd {
+    float: left;
+    margin-left: 1em;
+}

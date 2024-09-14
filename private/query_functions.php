@@ -132,8 +132,7 @@ function find_food_by_id($id): false|array|null {
 function find_food_by_user($user_id): false|mysqli_result {
     global $db;
 
-    $stmt = $db ->prepare("SELECT user_food.item_id, food.food_name, food.fat, food.carb, food.protein, 
-            food.serving_description, user_food.date_added FROM food 
+    $stmt = $db ->prepare("SELECT * FROM food 
             INNER JOIN user_food ON user_food.food_id = food.food_id 
             INNER JOIN users ON users.user_id = user_food.user_id 
             WHERE users.user_id = ?
@@ -145,14 +144,14 @@ function find_food_by_user($user_id): false|mysqli_result {
     return $result;
 }
 
-function add_food($food_id): bool {
+function add_food($food_id, $servings): bool {
     global $db;
     $user_id = $_SESSION['user_id'];
 
-    $date = date("Y-m-d", time());
+    $date = date("Y-m-d h:m:s", time());
 
-    $stmt = $db -> prepare("INSERT INTO user_food (user_id, food_id, date_added) VALUES (?, ?, ?)");
-    $stmt -> bind_param("iis", $user_id, $food_id, $date);
+    $stmt = $db -> prepare("INSERT INTO user_food (user_id, food_id, date_added, servings) VALUES (?, ?, ?, ?)");
+    $stmt -> bind_param("iisd", $user_id, $food_id, $date, $servings);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;

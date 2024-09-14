@@ -43,6 +43,13 @@ function is_get_request(): bool {
     return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
 
+function display_message(): void {
+    if (isset($_SESSION['message'])) {
+        echo $_SESSION['message'];
+        unset($_SESSION['message']);
+    }
+}
+
 function display_errors($errors=array()): string {
     $output = '';
     if(!empty($errors)) {

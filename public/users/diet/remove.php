@@ -12,5 +12,5 @@ if ($result) {
     $errors[] = "Something went wrong";
 }
 
-redirect_to(url_for('/users/diet/show.php'));
+redirect_to(url_for('/users/diet/index.php'));
 ?>

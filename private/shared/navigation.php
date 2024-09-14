@@ -1,6 +1,6 @@
 <?php global $id; ?>
 
-<div id="page_links">
+<div id="nav_bar">
     <a href="<?php echo url_for('users/index.php') ?>">Home</a>&nbsp;&nbsp;&nbsp;
     <a href="<?php echo url_for('users/diet/index.php') ?>">Diet</a>&nbsp;&nbsp;&nbsp;
     <a href="<?php echo url_for('users/exercise/index.php') ?>">Exercise</a>&nbsp;&nbsp;&nbsp;

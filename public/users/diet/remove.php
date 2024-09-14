@@ -2,7 +2,7 @@
 require_once "../../../private/initialize.php";
 require_login();
 
-$id = $_GET['food_id'] ?? '';
+$id = $_GET['id'] ?? '';
 
 $result = remove_food($id);
 

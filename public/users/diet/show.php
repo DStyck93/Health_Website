@@ -6,6 +6,16 @@ global $errors;
 
 $food_set = find_food_by_user($_SESSION['user_id']);
 
+if(is_post_request()) {
+    try {
+        $result = remove_food($_SESSION['remove_id']);
+        $_SESSION['message'] = "Food removed!";
+    } catch (exception) {
+        $errors[] = "Couldn't remove food!";
+    }
+    unset($_SESSION['remove_id']);
+}
+
 $page_title = 'Diet';
 include(SHARED_PATH . '/user_header.php');
 ?>
@@ -27,7 +37,6 @@ if (!empty($food_set)) { ?>
 
     <table class="list">
         <tr>
-            <th>ID</th>
             <th>Date</th>
             <th>Name</th>
             <th>Calories</th>
@@ -40,7 +49,6 @@ if (!empty($food_set)) { ?>
 
         <?php foreach ($food_set as $food) { ?>
             <tr>
-                <td><?php echo h($food['item_id'])?></td>
                 <td><?php echo h($food['date_added'])?></td>
                 <td><?php echo h($food['food_name']); ?></td>
                 <?php $macros = array('fat' => $food['fat'], 'carb' => $food['carb'], 'protein' => $food['protein']) ?>
@@ -49,7 +57,12 @@ if (!empty($food_set)) { ?>
                 <td><?php echo h($food['carb']); ?></td>
                 <td><?php echo h($food['protein']); ?></td>
                 <td><?php echo h($food['serving_description']); ?></td>
-                <td><a href="<?php echo url_for('/users/diet/remove.php?id=' . h(u($food['item_id']))); ?>">Remove</a></td>
+                <td>
+                    <form action="<?php echo url_for('/users/diet/remove.php?id=' . h(u($food['item_id'])))?>"
+                          method="post">
+                        <input type="submit" name="remove" value="Remove"/>
+                    </form>
+                </td>
             </tr>
         <?php } ?>
 

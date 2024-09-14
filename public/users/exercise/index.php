@@ -6,7 +6,7 @@ $page_title = 'Exercise';
 include(SHARED_PATH . '/user_header.php');
 ?>
 
-<h1>Exercise</h1>
+<h1>Exercise (Coming Soon!)</h1> <!-- TODO - Edit header -->
 
 <?php include(SHARED_PATH . '/navigation.php'); ?>
 

@@ -20,5 +20,6 @@ require_once('validation_functions.php');
 require_once('auth_functions.php');
 
 $db = db_connect();
+//$db -> change_user(DB_USER, DB_USER_PASS, DB_NAME);
 $errors = [];
 ?>

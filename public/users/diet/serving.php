@@ -9,7 +9,7 @@ $id = $_POST["id"] ?? '';
 $food = find_food_by_id($id);
 
 $page_title = 'Diet';
-include(SHARED_PATH . '/user_header.php');
+include(SHARED_PATH . '/header.php');
 ?>
 
 <!-- Page Header -->

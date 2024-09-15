@@ -16,7 +16,7 @@ if (is_post_request()) {
 }
 
 $page_title = 'Diet';
-include(SHARED_PATH . '/user_header.php');
+include(SHARED_PATH . '/header.php');
 ?>
 
 <!-- Page Header -->
@@ -50,7 +50,7 @@ include(SHARED_PATH . '/user_header.php');
             <th id="table_number">Carbs</th>
             <th id="table_number">Fats</th>
             <th id="table_number">Protein</th>
-            <th id="table_number">Serving Weight (g)</th>
+            <th id="table_number">Serving Size (g)</th>
             <th>Serving Description</th>
             <th>&nbsp;</th>
         </tr>

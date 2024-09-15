@@ -2,7 +2,7 @@
 require_once('../../private/initialize.php');
 require_login();
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_COOKIE['user_id'];
 
 // Get user nutrition data
 $daily_nutrition_set = get_user_nutrition($user_id, 'day');
@@ -18,10 +18,10 @@ $monthly_total_nutrition = calculate_nutrition($monthly_nutrition_set);
 $monthly_calories = calculate_calories($monthly_total_nutrition);
 
 $page_title = 'Home';
-include(SHARED_PATH . '/user_header.php');
+include(SHARED_PATH . '/header.php');
 ?>
 
-<h1>Welcome <?php echo $_SESSION['username'] ?></h1>
+<h1>Welcome <?php echo h($_SESSION['username']) ?></h1>
 
 <?php include(SHARED_PATH . '/navigation.php'); ?>
 

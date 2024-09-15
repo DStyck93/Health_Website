@@ -51,7 +51,7 @@ include(SHARED_PATH . '/header.php');
     <dl><dt>Password*</dt>
         <dd><label><input type="password" name="password"</label></dd>
     </dl>
-    <dl><dt>Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl>
+    <dl><dt>Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl><br>
     <!-- Submit -->
     <label><input type="submit" value="Create Account"</label>
 </form>

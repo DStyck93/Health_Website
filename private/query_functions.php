@@ -1,52 +1,7 @@
 <?php
+require_once 'initialize.php';
 
 // User
-
-function validate_new_user($user): array {
-    global $errors;
-
-    // Username
-    if (is_blank($user['username'])) {
-        $errors[] = "Username cannot be blank.";
-    } elseif (!has_length($user['username'], ['min' => 5, 'max' => 50])) {
-        $errors[] = "Username must be between 5 and 50 characters.";
-    } elseif (!has_unique_username($user['username'])) {
-        $errors[] = "Username already exists.";
-    }
-
-    // Email
-    if (is_blank($user['email'])) {
-        $errors[] = "Email cannot be blank.";
-    } elseif (!has_length($user['email'], ['max' => 100])) {
-        $errors[] = "Email cannot be greater than 100 characters.";
-    } elseif (!has_valid_email_format($user['email'])) {
-        $errors[] = "Invalid email format.";
-    }
-
-    // Password
-    if (is_blank($user['password'])) {
-        $errors[] = "Password cannot be blank.";
-    } elseif (!has_length($user['password'], ['min' => 5, 'max' => 20])) {
-        $errors[] = "Password must be between 5 and 20 characters.";
-    } elseif (!preg_match('/[A-Z]/', $user['password'])) {
-        $errors[] = "Password must contain at least 1 uppercase letter";
-    } elseif (!preg_match('/[a-z]/', $user['password'])) {
-        $errors[] = "Password must contain at least 1 lowercase letter";
-    } elseif (!preg_match('/[0-9]/', $user['password'])) {
-        $errors[] = "Password must contain at least 1 number";
-    } elseif (!preg_match('/[^A-Za-z0-9\s]/', $user['password'])) {
-        $errors[] = "Password must contain at least 1 symbol";
-    }
-
-    // Confirm Password
-    if(is_blank($user['password_confirm'])) {
-        $errors[] = "Confirm password cannot be blank.";
-    } elseif ($user['password'] !== $user['password_confirm']) {
-        $errors[] = "Password and confirm password must match.";
-    }
-
-    return $errors;
-}
 
 function add_user($user): array|bool {
     global $db;
@@ -60,6 +15,26 @@ function add_user($user): array|bool {
 
     $stmt = $db -> prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
     $stmt -> bind_param("sss", $user['username'], $user['email'], $hashed_password);
+    $result = $stmt -> execute();
+    $stmt -> close();
+    return $result;
+}
+
+function remove_user(): bool {
+    global $db;
+
+    $stmt = $db -> prepare("DELETE FROM users WHERE user_id = ?");
+    $stmt -> bind_param("i", $_COOKIE['user_id']);
+    $result = $stmt -> execute();
+    $stmt -> close();
+    return $result;
+}
+
+function update_user_query($user, $update_type, $update_value): bool {
+    global $db;
+
+    $stmt = $db -> prepare("UPDATE users SET $update_type = ? WHERE user_id = ?");
+    $stmt -> bind_param("ss", $update_value, $_COOKIE['user_id']);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;
@@ -146,7 +121,7 @@ function find_food_by_user($user_id): false|mysqli_result {
 
 function add_food($food_id, $servings): bool {
     global $db;
-    $user_id = $_SESSION['user_id'];
+    $user_id = $_COOKIE['user_id'];
 
     $date = date("Y-m-d h:m:s", time());
 

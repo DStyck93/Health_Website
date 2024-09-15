@@ -25,7 +25,7 @@ if (is_post_request()) {
 include(SHARED_PATH . '/header.php');
 ?>
 
-<h1>Sign In</h1>
+<h1 style="text-align: left;">Sign In</h1>
 
 <p><?php echo display_errors($errors) ?></p>
 

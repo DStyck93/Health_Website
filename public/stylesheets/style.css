@@ -22,8 +22,7 @@ table.list {
 table.list th {
     padding-left: 5px;
     padding-right: 5px;
-    min-width: 50px;
-
+    min-width: 55px;
 }
 
 table.list tr td {
@@ -58,21 +57,10 @@ table.list tr th {
 
 /* Forms */
 
-dl {
-    clear: both;
-    overflow: hidden;
-    margin: 0.5em 0;
-}
-
 dt {
     float: left;
     font-weight: bold;
-    width: 50px;
-}
-
-dd {
-    float: left;
-    margin-left: 1em;
+    width: 150px;
 }
 
 .slider {
@@ -98,7 +86,16 @@ dd {
     font-size: 20pt;
 }
 
+#edit_profile {
+    float: left;
+    width: 140px;
+}
+
 /* Misc. Buttons */
+
+#profile_button {
+    width: 100px;
+}
 
 #add_food_button {
     font-size: 20px;
@@ -117,6 +114,20 @@ dd {
 }
 
 /* Misc. */
+
+#error_message {
+    font-weight: bold;
+    font-size: 14pt;
+    font-family: "Courier New", serif;
+    color: #5a5a5a;
+}
+
+#message {
+    font-weight: bold;
+    font-size: 14pt;
+    font-family: "Courier New", serif;
+    color: #5a5a5a;
+}
 
 #nav_bar {
     border-style: solid;

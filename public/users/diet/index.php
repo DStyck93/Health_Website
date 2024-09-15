@@ -2,7 +2,7 @@
 require_once('../../../private/initialize.php');
 require_login();
 global $errors;
-$user_id = $_SESSION['user_id'];
+$user_id = $_COOKIE['user_id'];
 
 // Get user nutrition data
 $daily_nutrition_set = get_user_nutrition($user_id, 'day');
@@ -18,7 +18,7 @@ $monthly_total_nutrition = calculate_nutrition($monthly_nutrition_set);
 $monthly_calories = calculate_calories($monthly_total_nutrition);
 
 // User's food
-$food_set = find_food_by_user($_SESSION['user_id']);
+$food_set = find_food_by_user($_COOKIE['user_id']);
 
 // Remove food
 if(is_post_request()) {
@@ -32,7 +32,7 @@ if(is_post_request()) {
 }
 
 $page_title = 'Diet';
-include(SHARED_PATH . '/user_header.php');
+include(SHARED_PATH . '/header.php');
 ?>
 
 <h1>Diet</h1>
@@ -110,8 +110,9 @@ if (!empty($food_set)) { ?>
                 <td id="table_number"><?php echo h($food['protein']); ?></td>
                 <td id="table_number"><?php echo h($food['servings']) ?></td>
                 <td>
-                    <form action="<?php echo url_for('/users/diet/remove.php?id=' . h(u($food['item_id'])))?>"
+                    <form action="<?php echo url_for('/users/diet/remove.php')?>"
                           method="POST">
+                        <input type="hidden" name="id" value="<?php echo h($food['item_id'])?>">
                         <input type="submit" name="remove" value="Remove"/>
                     </form>
                 </td>

@@ -4,7 +4,7 @@ require_login();
 global $errors;
 
 $page_title = 'Diet';
-include(SHARED_PATH . '/user_header.php');
+include(SHARED_PATH . '/header.php');
 ?>
 
 <!-- Page Header -->

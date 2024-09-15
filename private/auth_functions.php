@@ -1,31 +1,38 @@
 <?php
-
-// TODO - Remove login cookie and replace with Session Token
 function login($user): true {
-    session_regenerate_id();
-    $_SESSION['user_id'] = $user['user_id'];
-    $_SESSION['last_login'] = time();
-    $_SESSION['username'] = $user['username'];
+    $seconds_in_month = 60 * 60 * 24 * 30;
 
-    $login_time = time() + 60 * 60 * 24 * 7 * 4; // Time till login expires
-    setcookie("user_id", $user['user_id'], $login_time);
-    setcookie("last_login", time(), $login_time);
+    session_regenerate_id(true);
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['email'] = $user['email'];
+    $_SESSION['hashed_password'] = $user['password'];
+
+    // Params: name, value, expires, path, domain, secure, httponly
+    setcookie(
+        'user_id',
+        $user['user_id'],
+        time() + $seconds_in_month,
+        null,
+        null,
+        true,
+        true
+    );
 
     return true;
 }
 
 function logout(): true {
-    unset($_SESSION['user_id']);
-    unset($_SESSION['last_login']);
+    setcookie('user_id', '', time() - 3600);
+    unset($_COOKIE['user_id']);
     unset($_SESSION['username']);
-
-    setcookie("user_id", "", time() - 3600); // Remove cookie
-
+    unset($_SESSION['email']);
+    unset($_SESSION['hashed_password']);
+    session_destroy();
     return true;
 }
 
 function is_logged_in(): bool {
-    return isset($_SESSION['user_id']);
+    return isset($_COOKIE['user_id']);
 }
 
 function require_login(): void {
@@ -33,5 +40,4 @@ function require_login(): void {
         redirect_to(url_for('index.php'));
     }
 }
-
 ?>

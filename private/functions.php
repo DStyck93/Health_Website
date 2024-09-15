@@ -53,7 +53,7 @@ function display_message(): void {
 function display_errors($errors=array()): string {
     $output = '';
     if(!empty($errors)) {
-        $output .= "<div class=\"errors\">";
+        $output .= "<div id=\"error_message\">";
         $output .= "Error:";
         $output .= "<ul>";
         foreach($errors as $error) {

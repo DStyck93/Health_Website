@@ -104,22 +104,34 @@ function find_food_by_id($id): false|array|null {
     return $food;
 }
 
-function find_food_by_user($user_id): false|mysqli_result {
+function find_food_by_user(string $time_frame): false|mysqli_result {
     global $db;
+    $user_id = $_COOKIE['user_id'];
 
-    $stmt = $db ->prepare("SELECT * FROM food 
+    $base_stmt = "SELECT * FROM food 
             INNER JOIN user_food ON user_food.food_id = food.food_id 
             INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ?
-            ORDER BY date_added DESC");
-    $stmt -> bind_param("i", $user_id);
+            WHERE users.user_id = $user_id
+            AND user_food.date_added >= ";
+    $end_stmt = " ORDER BY date_added DESC;";
+
+    if ($time_frame == 'day') {
+        $stmt = $db ->prepare($base_stmt . "CURRENT_DATE()" . $end_stmt);
+
+    } else if ($time_frame == 'week' || $time_frame == '') {
+        $stmt = $db ->prepare($base_stmt . "WEEK(CURRENT_DATE())" . $end_stmt);
+
+    } else {
+        $stmt = $db ->prepare($base_stmt . "MONTH(CURRENT_DATE())" . $end_stmt);
+    }
+
     $stmt -> execute();
     $result = $stmt -> get_result();
     $stmt -> close();
     return $result;
 }
 
-function add_food($food_id, $servings): bool {
+function add_food(int $food_id, float $servings): bool {
     global $db;
     $user_id = $_COOKIE['user_id'];
 
@@ -132,7 +144,7 @@ function add_food($food_id, $servings): bool {
     return $result;
 }
 
-function remove_food($id): bool {
+function remove_food(int $id): bool {
     global $db;
 
     $stmt = $db -> prepare("DELETE FROM user_food WHERE item_id = ?");
@@ -147,33 +159,26 @@ function remove_food($id): bool {
  * @param string $time_range "day", "week", or "month".
  * @return false|mysqli_result
  */
-function get_user_nutrition(int $user_id, string $time_range): false|mysqli_result {
+function get_user_nutrition(string $time_range): false|mysqli_result {
     global $db;
-    $stmt = '';
+    $user_id = $_COOKIE['user_id'];
+
+    $base_stmt = "SELECT food.fat, food.carb, food.protein FROM food 
+            INNER JOIN user_food ON user_food.food_id = food.food_id 
+            INNER JOIN users ON users.user_id = user_food.user_id 
+            WHERE users.user_id = $user_id 
+            AND user_food.date_added >= ";
 
     if($time_range == "day") {
-        $stmt = $db ->prepare("SELECT food.fat, food.carb, food.protein FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ? 
-            AND user_food.date_added >= CURRENT_DATE();");
+        $stmt = $db ->prepare($base_stmt . "CURRENT_DATE();");
 
-    } elseif ($time_range == "week") {
-        $stmt = $db ->prepare("SELECT food.fat, food.carb, food.protein FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ? 
-            AND WEEK(user_food.date_added) >= WEEK(CURRENT_DATE());");
+    } elseif ($time_range == "week" || $time_range == '') {
+        $stmt = $db ->prepare($base_stmt . "WEEK(CURRENT_DATE());");
 
-    } elseif ($time_range == "month") {
-        $stmt = $db ->prepare("SELECT food.fat, food.carb, food.protein FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ? 
-            AND MONTH(user_food.date_added) >= MONTH(CURRENT_DATE());");
+    } else {
+        $stmt = $db ->prepare($base_stmt . "MONTH(CURRENT_DATE());");
     }
 
-    $stmt -> bind_param("i", $user_id);
     $stmt -> execute();
     $result = $stmt -> get_result();
     $stmt -> close();

@@ -1,24 +1,18 @@
 <?php
 require_once('../../../private/initialize.php');
 require_login();
+
 global $errors;
-$user_id = $_COOKIE['user_id'];
+
+$time_frame = $_GET['tf'] ?? '';
 
 // Get user nutrition data
-$daily_nutrition_set = get_user_nutrition($user_id, 'day');
-$daily_total_nutrition = calculate_nutrition($daily_nutrition_set);
-$daily_calories = calculate_calories($daily_total_nutrition);
-
-$weekly_nutrition_set = get_user_nutrition($user_id, 'week');
-$weekly_total_nutrition = calculate_nutrition($weekly_nutrition_set);
-$weekly_calories = calculate_calories($weekly_total_nutrition);
-
-$monthly_nutrition_set = get_user_nutrition($user_id, 'month');
-$monthly_total_nutrition = calculate_nutrition($monthly_nutrition_set);
-$monthly_calories = calculate_calories($monthly_total_nutrition);
+$nutrition_set = get_user_nutrition($_COOKIE['user_id'], $time_frame);
+$total_nutrition = calculate_nutrition($nutrition_set);
+$calories = calculate_calories($total_nutrition);
 
 // User's food
-$food_set = find_food_by_user($_COOKIE['user_id']);
+$food_set = find_food_by_user($time_frame);
 
 // Remove food
 if(is_post_request()) {
@@ -44,32 +38,19 @@ echo display_errors($errors);
 echo "</br><p>" . display_message() . "</p>";
 ?>
 
+<!-- Timeframe Selector -->
+<?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
+
 <!-- Nutrition Numbers -->
-<div id="row">
-    <div id="column">
-        <h2>Daily</h2>
-        <h3>Calories: <?php echo h($daily_calories) ?></h3>
-        <h4>Carbs: <?php echo h($daily_total_nutrition['carb']) ?></h4>
-        <h4>Fats: <?php echo h($daily_total_nutrition['fat']) ?></h4>
-        <h4>Protein: <?php echo h($daily_total_nutrition['protein']) ?></h4>
-    </div>
 
-    <div id="column">
-        <h2>Weekly</h2>
-        <h3>Calories: <?php echo h($weekly_calories) ?></h3>
-        <h4>Carbs: <?php echo h($weekly_total_nutrition['carb']) ?></h4>
-        <h4>Fats: <?php echo h($weekly_total_nutrition['fat']) ?></h4>
-        <h4>Protein: <?php echo h($weekly_total_nutrition['protein']) ?></h4>
-    </div>
+<?php if($time_frame =='day') { ?><h2>Daily</h2>
+<?php } else if($time_frame == 'week' || $time_frame == '') { ?><h2>Weekly</h2>
+<?php } else { ?><h2>Monthly</h2><?php } ?>
 
-    <div id="column">
-        <h2>Monthly</h2>
-        <h3>Calories: <?php echo h($monthly_calories) ?></h3>
-        <h4>Carbs: <?php echo h($monthly_total_nutrition['carb']) ?></h4>
-        <h4>Fats: <?php echo h($monthly_total_nutrition['fat']) ?></h4>
-        <h4>Protein: <?php echo h($monthly_total_nutrition['protein']) ?></h4>
-    </div>
-</div>
+<h3>Calories: <?php echo h($calories) ?></h3>
+<h4>Carbs: <?php echo h($total_nutrition['carb']) ?></h4>
+<h4>Fats: <?php echo h($total_nutrition['fat']) ?></h4>
+<h4>Protein: <?php echo h($total_nutrition['protein']) ?></h4>
 
 <!-- Add Food Button -->
 <form action="<?php echo url_for('/users/diet/add.php'); ?>">
@@ -104,7 +85,7 @@ if (!empty($food_set)) { ?>
                 </td>
                 <td id="long_text"><?php echo h($food['food_name']); ?></td>
                 <td id="food_group"><?php echo h($food['food_group']); ?></td>
-                <td id="table_number"><?php echo h(calculate_calories($food))?></td>
+                <td id="table_number"><?php echo calculate_calories($food)?></td>
                 <td id="table_number"><?php echo h($food['carb']); ?></td>
                 <td id="table_number"><?php echo h($food['fat']); ?></td>
                 <td id="table_number"><?php echo h($food['protein']); ?></td>
@@ -131,9 +112,7 @@ if (!empty($food_set)) { ?>
 
 
 <?php
-mysqli_free_result($daily_nutrition_set);
-mysqli_free_result($weekly_nutrition_set);
-mysqli_free_result($monthly_nutrition_set);
+mysqli_free_result($nutrition_set);
 
 include(SHARED_PATH . '/footer.php');
 ?>

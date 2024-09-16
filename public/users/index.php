@@ -26,7 +26,11 @@ include(SHARED_PATH . '/header.php');
 <?php include(SHARED_PATH . '/navigation.php'); ?>
 
 <div id="content">
-    <h2></h2>
+
+    <div id="timeframe_nav">
+        <h2><a href="index.php?timeframe=daily">Daily</a></h2>
+    </div>
+
 
     <div id="row">
         <div id="column">

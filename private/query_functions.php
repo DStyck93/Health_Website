@@ -83,7 +83,7 @@ function find_food_by_name($name): false|mysqli_result {
     $name = '%' . $name . '%';
 
     $stmt = $db -> prepare("SELECT * FROM food WHERE food_name LIKE ? 
-                   ORDER BY CHAR_LENGTH(food_name) ASC, food_name ASC");
+                   ORDER BY CHAR_LENGTH(food_name) ASC, food_name ASC LIMIT 50;");
     $stmt -> bind_param("s", $name);
     $stmt -> execute();
     $result = $stmt -> get_result();

@@ -44,7 +44,7 @@ if (is_post_request()) {
 <?php include(SHARED_PATH . '/navigation.php');?>
 
 <!-- Back Link -->
-<p id="back_button"><a href="<?php echo url_for('/users/diet/index.php'); ?>">&laquo; Back</a></p>
+<p id="button"><a href="<?php echo url_for('/users/diet/index.php'); ?>">&laquo; Back</a></p>
 
 <!-- Messages -->
 <?php echo display_errors($errors);?>
@@ -73,7 +73,7 @@ if (is_post_request()) {
             <p id="range_value"><?php echo h($food['servings']) ?></p>
         </dd>
     </dl>
-    <input type="submit" value="Add Food" id="add_food_button"/>
+    <input type="submit" value="Add Food" id="button"/>
 </form>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>

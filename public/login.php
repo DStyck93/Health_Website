@@ -25,23 +25,23 @@ if (is_post_request()) {
 include(SHARED_PATH . '/header.php');
 ?>
 
-<h1 style="text-align: left;">Sign In</h1>
+<h1 id="landing_header">Sign In</h1>
 
 <p><?php echo display_errors($errors) ?></p>
 
-<a href="index.php">&laquo; Back</a>
+<a id="button" href="index.php">&laquo; Back</a>
 
 <form method="post">
     <!-- Username -->
-    <dl><dt>Username</dt>
+    <dl><dt id="sign_in">Username</dt>
         <dd><label><input type="text" name="username"></label></dd>
     </dl>
     <!-- Password -->
-    <dl><dt>Password</dt>
+    <dl><dt id="sign_in">Password</dt>
         <dd><label><input type="password" name="password"</label></dd>
     </dl>
     <!-- Submit Button -->
-    <label><input type="submit" value="Sign In"></label>
+    <label><input type="submit" value="Sign In" id="button"></label>
 </form>
 
 <?php include(SHARED_PATH . '/footer.php');?>

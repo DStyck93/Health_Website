@@ -57,6 +57,21 @@ table.list tr th {
 
 /* Forms */
 
+#button {
+    font-size: 15pt;
+    cursor: pointer;
+}
+
+#table_button {
+    font-size: 13pt;
+    border: none;
+    background-color: #fdfbe0;
+}
+
+#sign_in {
+    width: 60pt;
+}
+
 #custom_food {
     width: 75pt;
 }
@@ -100,33 +115,6 @@ dt {
     width: 140px;
 }
 
-/* Misc. Buttons */
-
-#profile_button {
-    width: 100px;
-}
-
-#add_food_button {
-    font-size: 20px;
-    width: 110px;
-    cursor: pointer;
-}
-
-#custom_food_button {
-    margin-bottom: 10pt;
-    font-size: 20px;
-}
-
-#search_button {
-    font-size: 20px;
-    cursor: pointer;
-}
-
-#back_button {
-    font-size: 20px;
-    cursor: pointer;
-}
-
 /* Navigation */
 
 #nav_bar {
@@ -139,8 +127,8 @@ dt {
 }
 
 .timeframe_nav {
-    height: 15pt;
-    width: 250pt;
+    height: 13pt;
+    width: 230pt;
     margin-top: 5pt;
     border-style: solid;
     border-width: 1pt;
@@ -160,6 +148,10 @@ a.timeframe_nav {
 }
 
 /* Misc. */
+
+#landing_header {
+    text-align: left;
+}
 
 #error_message {
     font-weight: bold;

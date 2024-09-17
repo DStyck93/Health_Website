@@ -12,10 +12,10 @@ if (isset($_COOKIE['user_id'])) { // Returning use
 include(SHARED_PATH . '/header.php');
 ?>
 
-<h1>Diet & Exercise</h1>
+<h1 id="landing_header">Diet & Exercise</h1>
 
 <h2>Sign in to begin your health journey.</h2>
-<h3><a href="login.php?>">Sign In</h3> <!-- FIXME -- Change to public/login.php before pushing -->
+<h3><a href="login.php">Sign In</h3> <!-- FIXME -- Change to public/login.php before pushing -->
 <h3><a href="new.php">Create Account</h3> <!-- FIXME -- Change to public/new.php before pushing -->
 
 <?php include(SHARED_PATH . '/footer.php');?>

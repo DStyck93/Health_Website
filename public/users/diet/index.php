@@ -1,3 +1,5 @@
+<!-- TODO - Limit to 50 results per page & add page selection -->
+
 <?php
 require_once('../../../private/initialize.php');
 require_login();
@@ -51,7 +53,7 @@ echo "</br><p>" . display_message() . "</p>";
 
 <!-- Add Food Button -->
 <form action="<?php echo url_for('/users/diet/add.php'); ?>">
-    <input type="submit" value="Add Food" id="add_food_button"/>
+    <input type="submit" value="Add Food" id="button"/>
 </form>
 
 <!-- User Food Table -->
@@ -89,7 +91,7 @@ if (!empty($food_set)) { ?>
                     <form action="<?php echo url_for('/users/diet/remove.php')?>"
                           method="POST">
                         <input type="hidden" name="id" value="<?php echo h($food['item_id'])?>">
-                        <input type="submit" name="remove" value="Remove"/>
+                        <input type="submit" name="remove" value="Remove" id="table_button"/>
                     </form>
                 </td>
             </tr>

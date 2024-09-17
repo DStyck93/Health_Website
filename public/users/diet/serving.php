@@ -17,7 +17,7 @@ include(SHARED_PATH . '/header.php');
 <?php include(SHARED_PATH . '/navigation.php');?>
 
 <!-- Back Link -->
-<p id="back_button"><a href="<?php echo url_for('/users/diet/add.php') ?>">&laquo; Back</a></p>
+<p id="button"><a href="<?php echo url_for('/users/diet/add.php') ?>">&laquo; Back</a></p>
 
 <!-- Messages -->
 <?php echo display_errors($errors);?>

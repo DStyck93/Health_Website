@@ -32,11 +32,13 @@ $page_title = 'Sign Up';
 include(SHARED_PATH . '/header.php');
 ?>
 
-<h1>Create Account</h1>
+<h1 id="landing_header">Create Account</h1>
 
 <p><?php echo display_errors($errors); ?></p>
 
-<a href="<?php echo url_for('index.php') ?>">&laquo; Back</a>
+<a id="button" href="<?php echo url_for('index.php') ?>">&laquo; Back</a><br>
+
+<p>*Password must be at least 5 characters long and contain 1 uppercase, lowercase, and special character.</p>
 
 <form action="" method="post">
     <!-- Username -->
@@ -53,9 +55,7 @@ include(SHARED_PATH . '/header.php');
     </dl>
     <dl><dt>Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl><br>
     <!-- Submit -->
-    <label><input type="submit" value="Create Account"</label>
+    <label><input type="submit" value="Create Account" id="button"</label>
 </form>
-
-<p>*Password must be at least 5 characters long and contain 1 uppercase, lowercase, and special character.</p>
 
 <?php include(SHARED_PATH . '/footer.php');?>

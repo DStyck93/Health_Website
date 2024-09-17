@@ -33,6 +33,11 @@ include(SHARED_PATH . '/header.php');
     <p>Click the Add button to adjust your serving size.</p>
 <?php } ?>
 
+<!-- Custom Food Button -->
+<form action="<?php echo url_for('users/diet/custom.php')?>">
+    <input id="custom_food_button" type="submit" value="Add Custom Food"/>
+</form>
+
 <!-- Search Bar -->
 <form action="<?php echo url_for('users/diet/add.php')?>" method="POST" id="search_bar">
     <label><input name='search' id="search_bar" type="search" placeholder="Lookup Food"/></label>

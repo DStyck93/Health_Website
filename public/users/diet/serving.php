@@ -38,7 +38,7 @@ include(SHARED_PATH . '/header.php');
       method="post">
     <input type="hidden" name="id" value="<?php echo h($id); ?>">
     <dl>
-        <dt>Servings</dt>
+        <dt id="servings">Servings</dt>
         <dd><label><input type="range" min='0.5' max='10' step='0.5' oninput="range_value.innerText = this.value"
                           name="servings" class="slider" value="1"/></label>
             <p id="range_value">1</p>

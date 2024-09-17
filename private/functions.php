@@ -65,9 +65,9 @@ function display_errors($errors=array()): string {
     return $output;
 }
 
-function calculate_nutrition($nutrition_query): array {
+function calculate_nutrition($food_set): array {
     $nutrition_info = array("fat" => 0, "carb" => 0, "protein" => 0);
-    foreach($nutrition_query as $food) {
+    foreach($food_set as $food) {
         $nutrition_info['fat'] += $food['fat'];
         $nutrition_info['carb'] += $food['carb'];
         $nutrition_info['protein'] += $food['protein'];

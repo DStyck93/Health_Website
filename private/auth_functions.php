@@ -38,6 +38,12 @@ function is_logged_in(): bool {
 function require_login(): void {
     if(!is_logged_in()) {
         redirect_to(url_for('index.php'));
+    } else if (!isset($_SESSION['username'])) {
+        session_regenerate_id(true);
+        $user = find_user_by_id($_COOKIE['user_id']);
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['hashed_password'] = $user['password'];
     }
 }
 ?>

@@ -7,12 +7,9 @@ global $errors;
 $time_frame = $_GET['tf'] ?? '';
 
 // Get user nutrition data
-$nutrition_set = get_user_nutrition($_COOKIE['user_id'], $time_frame);
-$total_nutrition = calculate_nutrition($nutrition_set);
-$calories = calculate_calories($total_nutrition);
-
-// User's food
 $food_set = find_food_by_user($time_frame);
+$total_nutrition = calculate_nutrition($food_set);
+$calories = calculate_calories($total_nutrition);
 
 // Remove food
 if(is_post_request()) {
@@ -43,8 +40,8 @@ echo "</br><p>" . display_message() . "</p>";
 
 <!-- Nutrition Numbers -->
 
-<?php if($time_frame =='day') { ?><h2>Daily</h2>
-<?php } else if($time_frame == 'week' || $time_frame == '') { ?><h2>Weekly</h2>
+<?php if($time_frame =='day' || $time_frame == '') { ?><h2>Daily</h2>
+<?php } else if($time_frame == 'week') { ?><h2>Weekly</h2>
 <?php } else { ?><h2>Monthly</h2><?php } ?>
 
 <h3>Calories: <?php echo h($calories) ?></h3>
@@ -66,7 +63,6 @@ if (!empty($food_set)) { ?>
         <tr>
             <th>Date</th>
             <th>Name</th>
-            <th>Group</th>
             <th id="table_number">Calories</th>
             <th id="table_number">Carbs</th>
             <th id="table_number">Fats</th>
@@ -79,12 +75,11 @@ if (!empty($food_set)) { ?>
             <tr>
                 <td>
                     <?php
-                    $formatted_date = date("m/d\nH:s", strtotime(h($food['date_added'])));
+                    $formatted_date = date("m/d", strtotime(h($food['date_added'])));
                     echo nl2br(h($formatted_date));
                     ?>
                 </td>
                 <td id="long_text"><?php echo h($food['food_name']); ?></td>
-                <td id="food_group"><?php echo h($food['food_group']); ?></td>
                 <td id="table_number"><?php echo calculate_calories($food)?></td>
                 <td id="table_number"><?php echo h($food['carb']); ?></td>
                 <td id="table_number"><?php echo h($food['fat']); ?></td>
@@ -103,7 +98,6 @@ if (!empty($food_set)) { ?>
     </table>
 
     <?php
-    mysqli_free_result($food_set);
 
 } else {
     echo "<p>You have no food added.</p>";
@@ -111,8 +105,4 @@ if (!empty($food_set)) { ?>
 ?>
 
 
-<?php
-mysqli_free_result($nutrition_set);
-
-include(SHARED_PATH . '/footer.php');
-?>
+<?php include(SHARED_PATH . '/footer.php'); ?>

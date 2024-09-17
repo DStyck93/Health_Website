@@ -57,15 +57,23 @@ table.list tr th {
 
 /* Forms */
 
+#custom_food {
+    width: 75pt;
+}
+
 dt {
     float: left;
     font-weight: bold;
     width: 150px;
 }
 
+#servings {
+    width: 72pt;
+}
+
 .slider {
     appearance: none;
-    width: 300px;
+    width: 180px;
     height: 25px;
     background: lightgrey;
     outline: none;
@@ -82,8 +90,9 @@ dt {
 }
 
 #range_value {
-    text-align: center;
+    text-align: left;
     font-size: 20pt;
+    margin-left: 105pt;
 }
 
 #edit_profile {
@@ -101,6 +110,11 @@ dt {
     font-size: 20px;
     width: 110px;
     cursor: pointer;
+}
+
+#custom_food_button {
+    margin-bottom: 10pt;
+    font-size: 20px;
 }
 
 #search_button {

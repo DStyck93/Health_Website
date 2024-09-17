@@ -7,8 +7,8 @@ global $errors;
 $time_frame = $_GET['tf'] ?? '';
 
 // Get user nutrition data
-$nutrition_set = get_user_nutrition($time_frame);
-$total_nutrition = calculate_nutrition($nutrition_set);
+$food_set = find_food_by_user($time_frame);
+$total_nutrition = calculate_nutrition($food_set);
 $calories = calculate_calories($total_nutrition);
 
 $page_title = 'Home';
@@ -27,8 +27,8 @@ echo "</br><p>" . display_message() . "</p>";
 <!-- Timeframe selector -->
 <?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
 
-<?php if ($time_frame == 'day') { ?><h2>Daily</h2>
-<?php } else if ($time_frame == 'week' || $time_frame == '') { ?><h2>Weekly</h2>
+<?php if ($time_frame == 'day' || $time_frame == '') { ?><h2>Daily</h2>
+<?php } else if ($time_frame == 'week') { ?><h2>Weekly</h2>
 <?php } else { ?><h2>Monthly</h2><?php } ?>
 
 <h3>Calories Consumed: <?php echo $calories ?></h3>
@@ -36,7 +36,6 @@ echo "</br><p>" . display_message() . "</p>";
 <h3>Net Calories: <?php echo $calories ?></h3> <!-- TODO - Subtract calories burned -->
 
 <?php
-mysqli_free_result($nutrition_set);
 
 include (SHARED_PATH . '/footer.php');
 ?>

@@ -5,7 +5,6 @@ function login($user): true {
     session_regenerate_id(true);
     $_SESSION['username'] = $user['username'];
     $_SESSION['email'] = $user['email'];
-    $_SESSION['hashed_password'] = $user['password'];
 
     // Params: name, value, expires, path, domain, secure, httponly
     setcookie(
@@ -26,7 +25,6 @@ function logout(): true {
     unset($_COOKIE['user_id']);
     unset($_SESSION['username']);
     unset($_SESSION['email']);
-    unset($_SESSION['hashed_password']);
     session_destroy();
     return true;
 }

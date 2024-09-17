@@ -1,4 +1,5 @@
 <!-- TODO - Limit to 50 results per page & add page selection -->
+<!-- TODO - Time not recording correctly -->
 
 <?php
 require_once('../../../private/initialize.php');
@@ -30,10 +31,9 @@ include(SHARED_PATH . '/header.php');
 
 <h1>Diet</h1>
 
-<?php
-include(SHARED_PATH . '/navigation.php');
+<?php include(SHARED_PATH . '/navigation.php'); ?><br>
 
-echo display_errors($errors);
+<?php echo display_errors($errors);
 echo "</br><p>" . display_message() . "</p>";
 ?>
 

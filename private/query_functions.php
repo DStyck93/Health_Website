@@ -30,7 +30,7 @@ function remove_user(): bool {
     return $result;
 }
 
-function update_user_query($user, $update_type, $update_value): bool {
+function update_user_query(string $update_type, string $update_value): bool {
     global $db;
 
     $stmt = $db -> prepare("UPDATE users SET $update_type = ? WHERE user_id = ?");

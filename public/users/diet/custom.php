@@ -48,7 +48,7 @@ if (is_post_request()) {
 
 <!-- Messages -->
 <?php echo display_errors($errors);?>
-<br><p><?php display_message() ?></p>
+<p><?php display_message() ?></p>
 <p>Enter the nutritional value for 1 serving.</p>
 
 <form action="custom.php" method="POST">

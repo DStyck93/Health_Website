@@ -215,7 +215,7 @@ function update_user() {
         if ($updated_user['username'] != '') {
             $errors = validate_username($updated_user['username']);
             if (empty($errors)) {
-                $result = update_user_query($user, 'username', $updated_user['username']);
+                $result = update_user_query('username', $updated_user['username']);
                 if ($result) {
                     $_SESSION['message'] = "Username successfully updated.\n";
                     $_SESSION['username'] = $updated_user['username'];
@@ -228,7 +228,7 @@ function update_user() {
         if ($updated_user['email'] != '') {
             $errors = validate_email($updated_user['email']);
             if (empty($errors)) {
-                $result = update_user_query($user, 'email', $updated_user['email']);
+                $result = update_user_query('email', $updated_user['email']);
                 if ($result) {
                     $_SESSION['message'] = "Email successfully updated.\n";
                     $_SESSION['email'] = $updated_user['email'];
@@ -242,7 +242,7 @@ function update_user() {
             $errors = validate_password($updated_user['new_password'], $updated_user['confirm_password']);
             if (empty($errors)) {
                 $hashed_password = password_hash($updated_user['new_password'], PASSWORD_DEFAULT);
-                $result = update_user_query($user, 'password', $hashed_password);
+                $result = update_user_query('password', $hashed_password);
                 if ($result) {
                     $_SESSION['message'] = "Password successfully updated.\n";
                 } else {

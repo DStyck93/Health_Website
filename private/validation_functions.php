@@ -126,68 +126,57 @@ function has_unique_email($email): bool {
     return $user_count === 0;
 }
 
-function validate_username($username) {
-    global $errors;
+function validate_password(string $password, string $password_confirm): array {
+    $errors = array();
 
-    if (is_blank($username)) {
-        $errors[] = "Username cannot be blank.";
-    } elseif (!has_length($username, ['min' => 5, 'max' => 50])) {
-        $errors[] = "Username must be between 5 and 50 characters.";
-    } elseif (!has_unique_username($username)) {
-        $errors[] = "Username already exists.";
-    }
-    return $errors;
-}
 
-function validate_email($email) {
-    global $errors;
-
-    if (is_blank($email)) {
-        $errors[] = "Email cannot be blank.";
-    } elseif (!has_length($email, ['max' => 100])) {
-        $errors[] = "Email cannot be greater than 100 characters.";
-    } elseif (!has_valid_email_format($email)) {
-        $errors[] = "Invalid email format.";
-    } elseif (!has_unique_email($email)) {
-        $errors[] = "Email already exists.";
-    }
-
-    return $errors;
-}
-
-function validate_password($password, $password_confirm) {
-    global $errors;
-
-    if (is_blank($password)) {
-        $errors[] = "Password cannot be blank.";
-    } elseif (!has_length($password, ['min' => 5, 'max' => 20])) {
-        $errors[] = "Password must be between 5 and 20 characters.";
-    } elseif (!preg_match('/[A-Z]/', $password)) {
-        $errors[] = "Password must contain at least 1 uppercase letter";
-    } elseif (!preg_match('/[a-z]/', $password)) {
-        $errors[] = "Password must contain at least 1 lowercase letter";
-    } elseif (!preg_match('/[0-9]/', $password)) {
-        $errors[] = "Password must contain at least 1 number";
-    } elseif (!preg_match('/[^A-Za-z0-9\s]/', $password)) {
-        $errors[] = "Password must contain at least 1 symbol";
-    }
-
-    // Confirm Password
-    if(is_blank($password_confirm)) {
-        $errors[] = "Confirm password cannot be blank.";
-    } elseif ($password !== $password_confirm) {
-        $errors[] = "Password and confirm password must match.";
-    }
 
     return $errors;
 }
 
 function validate_new_user($user): array {
-    global $errors;
+    $errors = array();
 
-    $errors[] = validate_username($user["username"]);
-    $errors[] = validate_email($user["email"]);
-    $errors[] = validate_password($user["password"], $user["password_confirm"]);
+    // Username
+    if (is_blank($user['username'])) {
+        $errors[] = "Username cannot be blank.";
+    } elseif (!has_length($user['username'], ['min' => 5, 'max' => 50])) {
+        $errors[] = "Username must be between 5 and 50 characters.";
+    } elseif (!has_unique_username($user['username'])) {
+        $errors[] = "Username already exists.";
+    }
+
+    // Email
+    if (is_blank($user['email'])) {
+        $errors[] = "Email cannot be blank.";
+    } elseif (!has_length($user['email'], ['max' => 100])) {
+        $errors[] = "Email cannot be greater than 100 characters.";
+    } elseif (!has_valid_email_format($user['email'])) {
+        $errors[] = "Invalid email format.";
+    } elseif (!has_unique_email($user['email'])) {
+        $errors[] = "Email already exists.";
+    }
+
+    if (is_blank($user['password'])) {
+        $errors[] = "Password cannot be blank.";
+    } elseif (!has_length($user['password'], ['min' => 5, 'max' => 20])) {
+        $errors[] = "Password must be between 5 and 20 characters.";
+    } elseif (!preg_match('/[A-Z]/', $user['password'])) {
+        $errors[] = "Password must contain at least 1 uppercase letter";
+    } elseif (!preg_match('/[a-z]/', $user['password'])) {
+        $errors[] = "Password must contain at least 1 lowercase letter";
+    } elseif (!preg_match('/[0-9]/', $user['password'])) {
+        $errors[] = "Password must contain at least 1 number";
+    } elseif (!preg_match('/[^A-Za-z0-9\s]/', $user['password'])) {
+        $errors[] = "Password must contain at least 1 symbol";
+    }
+
+    // Confirm Password
+    if(is_blank($user['password_confirm'])) {
+        $errors[] = "Confirm password cannot be blank.";
+    } elseif ($user['password'] !== $user['password_confirm']) {
+        $errors[] = "Password and confirm password must match.";
+    }
 
     return $errors;
 }

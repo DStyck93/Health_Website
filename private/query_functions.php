@@ -178,7 +178,9 @@ function find_food_by_user(string $time_frame): array {
 function add_food(int $food_id, float $servings): bool {
     global $db;
 
-    $date = date("Y-m-d h:m:s", time());
+    // Store date as central
+    date_default_timezone_set("America/Chicago");
+    $date = date("Y-m-d H:i:s", time());
 
     $stmt = $db -> prepare("INSERT INTO user_food (user_id, food_id, date_added, servings) VALUES (?, ?, ?, ?)");
     $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $date, $servings);
@@ -189,6 +191,9 @@ function add_food(int $food_id, float $servings): bool {
 
 function add_custom_food(array $food): bool {
     global $db;
+
+    // Store date as central
+    date_default_timezone_set("America/Chicago");
     $date = date("Y-m-d h:m:s", time());
 
     // Create food item

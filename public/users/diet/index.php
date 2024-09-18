@@ -77,7 +77,7 @@ if (!empty($food_set)) { ?>
             <tr>
                 <td>
                     <?php
-                    $formatted_date = date("m/d", strtotime(h($food['date_added'])));
+                    $formatted_date = date("m/d H:i", strtotime(h($food['date_added'])));
                     echo nl2br(h($formatted_date));
                     ?>
                 </td>

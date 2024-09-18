@@ -2,7 +2,7 @@
 <!-- TODO - Adjust for timezone conversions -->
 
 <?php
-require_once('../../../private/initialize.php');
+require_once('../../../../private/initialize.php');
 require_login();
 
 global $errors;

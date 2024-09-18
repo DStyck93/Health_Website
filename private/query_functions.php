@@ -30,7 +30,7 @@ function remove_user(): bool {
     return $result;
 }
 
-function update_user_query($user, $update_type, $update_value): bool {
+function update_user_query(string $update_type, string $update_value): bool {
     global $db;
 
     $stmt = $db -> prepare("UPDATE users SET $update_type = ? WHERE user_id = ?");
@@ -83,7 +83,7 @@ function find_food_by_name($name): false|mysqli_result {
     $name = '%' . $name . '%';
 
     $stmt = $db -> prepare("SELECT * FROM food WHERE food_name LIKE ? 
-                   ORDER BY CHAR_LENGTH(food_name) ASC, food_name ASC");
+                   ORDER BY CHAR_LENGTH(food_name) ASC, food_name ASC LIMIT 50;");
     $stmt -> bind_param("s", $name);
     $stmt -> execute();
     $result = $stmt -> get_result();
@@ -104,35 +104,120 @@ function find_food_by_id($id): false|array|null {
     return $food;
 }
 
-function find_food_by_user($user_id): false|mysqli_result {
-    global $db;
-
-    $stmt = $db ->prepare("SELECT * FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ?
-            ORDER BY date_added DESC");
-    $stmt -> bind_param("i", $user_id);
-    $stmt -> execute();
-    $result = $stmt -> get_result();
-    $stmt -> close();
-    return $result;
-}
-
-function add_food($food_id, $servings): bool {
+/**
+ * Used to build food list for a specific user. Takes into account standard and custom food.
+ * @param string $time_frame 'day', 'week', or 'month'
+ * @return array An associative array of the food sorted by date added descending.
+ */
+function find_food_by_user(string $time_frame): array {
     global $db;
     $user_id = $_COOKIE['user_id'];
 
-    $date = date("Y-m-d h:m:s", time());
+    // Standard Food
+    $base_stmt = "SELECT food.food_name, food.fat, food.carb, food.protein, user_food.date_added, user_food.servings, 
+        user_food.item_id 
+        FROM food 
+        INNER JOIN user_food ON user_food.food_id = food.food_id 
+        INNER JOIN users ON users.user_id = user_food.user_id 
+        WHERE users.user_id = $user_id AND user_food.date_added >= ";
+
+    if ($time_frame == 'day' || $time_frame == '') {
+        $stmt = $db ->prepare($base_stmt . "CURRENT_DATE();");
+
+    } else if ($time_frame == 'week') {
+        $stmt = $db ->prepare($base_stmt . "WEEK(CURRENT_DATE());");
+
+    } else {
+        $stmt = $db ->prepare($base_stmt . "MONTH(CURRENT_DATE());");
+    }
+    $stmt -> execute();
+    $standard_result = $stmt -> get_result();
+    $stmt -> close();
+
+    // Custom Food
+    $base_stmt = "SELECT custom_food.cf_name, custom_food.fat, custom_food.carbs, custom_food.protein, 
+        user_food.date_added, user_food.servings, user_food.item_id  
+        FROM custom_food  
+        INNER JOIN user_food ON user_food.custom_food_id = custom_food.cf_id 
+        INNER JOIN users ON users.user_id = user_food.user_id 
+        WHERE users.user_id = $user_id AND ";
+
+    if ($time_frame == 'day') {
+        $stmt = $db ->prepare($base_stmt . "CURRENT_DATE();");
+
+    } else if ($time_frame == 'week' || $time_frame == '') {
+        $stmt = $db ->prepare($base_stmt . "WEEK(CURRENT_DATE());");
+
+    } else {
+        $stmt = $db ->prepare($base_stmt . "MONTH(CURRENT_DATE());");
+    }
+    $stmt -> execute();
+    $custom_result = $stmt -> get_result();
+    $stmt -> close();
+
+    $result = array();
+    foreach ($standard_result as $food) {
+        $result[] = array('date_added' => $food['date_added'], 'food_name' => $food['food_name'], 'carb' => $food['carb'],
+            'fat' => $food['fat'], 'protein' => $food['protein'], 'servings' => $food['servings'],
+            'item_id' => $food['item_id']);
+    }
+    mysqli_free_result($standard_result);
+
+    foreach ($custom_result as $food) {
+        $result[] = array('date_added' => $food['date_added'], 'food_name' => $food['cf_name'], 'carb' => $food['carbs'],
+            'fat' => $food['fat'], 'protein' => $food['protein'], 'servings' => $food['servings'],
+            'item_id' => $food['item_id']);
+    }
+    mysqli_free_result($custom_result);
+
+    array_multisort(array_column($result, 'date_added'), SORT_DESC, $result);
+
+    return $result;
+}
+
+// TODO -- Fix timezone issue
+function add_food(int $food_id, float $servings): bool {
+    global $db;
+
+    // Store date as central
+    date_default_timezone_set("America/Chicago");
+    $date = date("Y-m-d H:i:s", time());
 
     $stmt = $db -> prepare("INSERT INTO user_food (user_id, food_id, date_added, servings) VALUES (?, ?, ?, ?)");
-    $stmt -> bind_param("iisd", $user_id, $food_id, $date, $servings);
+    $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $date, $servings);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;
 }
 
-function remove_food($id): bool {
+// TODO -- Fix timezone issue
+function add_custom_food(array $food): bool {
+    global $db;
+
+    // Store date as central
+    date_default_timezone_set("America/Chicago");
+    $date = date("Y-m-d h:m:s", time());
+
+    // Create food item
+    $stmt = $db -> prepare("INSERT INTO custom_food (user_id, cf_name, calories, carbs, fat, protein) VALUES (?, ?, ? , ?, ?, ?);");
+    $stmt ->bind_param("isiiii", $_COOKIE['user_id'], $food['name'], $food['calories'], $food['carbs'], $food['fat'], $food['protein']);
+    $result = $stmt -> execute();
+    $stmt -> close();
+
+    // Add to user's food history
+    if ($result) {
+        $food_id = mysqli_insert_id($db);
+
+        $stmt = $db -> prepare("INSERT INTO user_food (user_id, custom_food_id, date_added, servings) VALUES (?, ?, ?, ?);");
+        $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $date, $food['servings']);
+        $result = $stmt -> execute();
+        $stmt -> close();
+    }
+
+    return $result;
+}
+
+function remove_food(int $id): bool {
     global $db;
 
     $stmt = $db -> prepare("DELETE FROM user_food WHERE item_id = ?");
@@ -141,43 +226,3 @@ function remove_food($id): bool {
     $stmt -> close();
     return $result;
 }
-
-/**
- * @param int $user_id
- * @param string $time_range "day", "week", or "month".
- * @return false|mysqli_result
- */
-function get_user_nutrition(int $user_id, string $time_range): false|mysqli_result {
-    global $db;
-    $stmt = '';
-
-    if($time_range == "day") {
-        $stmt = $db ->prepare("SELECT food.fat, food.carb, food.protein FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ? 
-            AND user_food.date_added >= CURRENT_DATE();");
-
-    } elseif ($time_range == "week") {
-        $stmt = $db ->prepare("SELECT food.fat, food.carb, food.protein FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ? 
-            AND WEEK(user_food.date_added) >= WEEK(CURRENT_DATE());");
-
-    } elseif ($time_range == "month") {
-        $stmt = $db ->prepare("SELECT food.fat, food.carb, food.protein FROM food 
-            INNER JOIN user_food ON user_food.food_id = food.food_id 
-            INNER JOIN users ON users.user_id = user_food.user_id 
-            WHERE users.user_id = ? 
-            AND MONTH(user_food.date_added) >= MONTH(CURRENT_DATE());");
-    }
-
-    $stmt -> bind_param("i", $user_id);
-    $stmt -> execute();
-    $result = $stmt -> get_result();
-    $stmt -> close();
-
-    return $result;
-}
-?>

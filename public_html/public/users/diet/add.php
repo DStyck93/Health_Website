@@ -1,5 +1,5 @@
 <?php
-require_once('../../../private/initialize.php');
+require_once('../../../../private/initialize.php');
 require_login();
 
 global $errors;
@@ -24,7 +24,7 @@ include(SHARED_PATH . '/header.php');
 <?php include(SHARED_PATH . '/navigation.php');?>
 
 <!-- Back Link -->
-<p id="back_button"><a href="<?php echo url_for('/users/diet/index.php') ?>">&laquo; Back</a></p>
+<p id="button"><a href="<?php echo url_for('/users/diet/index.php') ?>">&laquo; Back</a></p>
 
 <!-- Messages -->
 <?php echo display_errors($errors);?>
@@ -33,10 +33,15 @@ include(SHARED_PATH . '/header.php');
     <p>Click the Add button to adjust your serving size.</p>
 <?php } ?>
 
+<!-- Custom Food Button -->
+<form action="<?php echo url_for('users/diet/custom.php')?>">
+    <input id="button" type="submit" value="Add Custom Food"/>
+</form><br>
+
 <!-- Search Bar -->
 <form action="<?php echo url_for('users/diet/add.php')?>" method="POST" id="search_bar">
     <label><input name='search' id="search_bar" type="search" placeholder="Lookup Food"/></label>
-    <input id="search_button" type="submit" value="Search"/>
+    <input id="button" type="submit" value="Search"/>
 </form>
 
 <!-- Search Table -->

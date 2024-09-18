@@ -1,5 +1,5 @@
 <?php
-require_once('../private/initialize.php');
+require_once('../../private/initialize.php');
 global $errors;
 $user = [];
 
@@ -32,30 +32,30 @@ $page_title = 'Sign Up';
 include(SHARED_PATH . '/header.php');
 ?>
 
-<h1>Create Account</h1>
+<h1 id="landing_header">Create Account</h1>
 
 <p><?php echo display_errors($errors); ?></p>
 
-<a href="<?php echo url_for('index.php') ?>">&laquo; Back</a>
+<a id="button" href="<?php echo url_for('index.php') ?>">&laquo; Back</a><br>
+
+<p>*Password must be at least 5 characters long and contain 1 uppercase, lowercase, and special character.</p>
 
 <form action="" method="post">
     <!-- Username -->
-    <dl><dt>Username</dt>
+    <dl><dt id="new_account">Username</dt>
         <dd><label><input type="text" name="username" value="<?php echo h($user['username'])?>"></label></dd>
     </dl>
     <!-- Email -->
-    <dl><dt>Email</dt>
+    <dl><dt id="new_account">Email</dt>
         <dd><label><input type="email" name="email" value="<?php echo h($user['email'])?>"></label></dd>
     </dl>
     <!-- Password -->
-    <dl><dt>Password*</dt>
+    <dl><dt id="new_account">Password*</dt>
         <dd><label><input type="password" name="password"</label></dd>
     </dl>
-    <dl><dt>Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl><br>
+    <dl><dt id="new_account">Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl><br>
     <!-- Submit -->
-    <label><input type="submit" value="Create Account"</label>
+    <label><input type="submit" value="Create Account" id="button"</label>
 </form>
-
-<p>*Password must be at least 5 characters long and contain 1 uppercase, lowercase, and special character.</p>
 
 <?php include(SHARED_PATH . '/footer.php');?>

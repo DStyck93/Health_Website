@@ -1,5 +1,5 @@
 <?php
-require_once('../../../private/initialize.php');
+require_once('../../../../private/initialize.php');
 require_login();
 global $errors;
 
@@ -17,7 +17,7 @@ include(SHARED_PATH . '/header.php');
 <?php include(SHARED_PATH . '/navigation.php');?>
 
 <!-- Back Link -->
-<p id="back_button"><a href="<?php echo url_for('/users/diet/add.php') ?>">&laquo; Back</a></p>
+<p id="button"><a href="<?php echo url_for('/users/diet/add.php') ?>">&laquo; Back</a></p>
 
 <!-- Messages -->
 <?php echo display_errors($errors);?>
@@ -38,13 +38,13 @@ include(SHARED_PATH . '/header.php');
       method="post">
     <input type="hidden" name="id" value="<?php echo h($id); ?>">
     <dl>
-        <dt>Servings</dt>
+        <dt id="servings">Servings</dt>
         <dd><label><input type="range" min='0.5' max='10' step='0.5' oninput="range_value.innerText = this.value"
                           name="servings" class="slider" value="1"/></label>
             <p id="range_value">1</p>
         </dd>
     </dl>
-    <input type="submit" value="Add Food" id="add_food_button"/>
+    <input type="submit" value="Add Food" id="button"/>
 </form>
 
 

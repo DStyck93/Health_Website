@@ -1,7 +1,7 @@
 <!-- TODO - production version not auto-logging properly -->
 
 <?php
-require_once('../private/initialize.php');
+require_once('../../private/initialize.php');
 
 if (is_logged_in()) {
     redirect_to(url_for('/users/index.php'));

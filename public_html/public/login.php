@@ -1,5 +1,5 @@
 <?php
-require_once('../private/initialize.php');
+require_once('../../private/initialize.php');
 global $errors;
 $user = ['username' => '', 'password' => ''];
 

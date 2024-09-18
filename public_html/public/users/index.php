@@ -1,5 +1,5 @@
 <?php
-require_once('../../private/initialize.php');
+require_once('../../../private/initialize.php');
 require_login();
 
 global $errors;
@@ -37,5 +37,5 @@ echo "</br><p>" . display_message() . "</p>";
 
 <?php
 
-include (SHARED_PATH . '/footer.php');
+include(SHARED_PATH . '/footer.php');
 ?>

@@ -155,6 +155,7 @@ function find_food_by_user(string $time_frame): array {
     $custom_result = $stmt -> get_result();
     $stmt -> close();
 
+    $result = array();
     foreach ($standard_result as $food) {
         $result[] = array('date_added' => $food['date_added'], 'food_name' => $food['food_name'], 'carb' => $food['carb'],
             'fat' => $food['fat'], 'protein' => $food['protein'], 'servings' => $food['servings'],

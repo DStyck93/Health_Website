@@ -36,12 +36,12 @@ include(SHARED_PATH . '/header.php');
     <dl><dt id="edit_profile">Confirm Password</dt>
         <dd><label><input type="password" placeholder="Confirm password" name="confirm_password"></label></dd>
     </dl>
-    <input type="submit" value="Update Profile" id="profile_button">
+    <input type="submit" value="Update Profile" id="button">
 
 </form><br>
 
 <form action="<?php echo url_for('/users/profile/delete.php') ?>" method="POST">
-    <input type="submit" value="Delete Profile" id="profile_button">
+    <input type="submit" value="Delete Profile" id="button">
 </form>
 
 

@@ -42,18 +42,18 @@ include(SHARED_PATH . '/header.php');
 
 <form action="" method="post">
     <!-- Username -->
-    <dl><dt>Username</dt>
+    <dl><dt id="new_account">Username</dt>
         <dd><label><input type="text" name="username" value="<?php echo h($user['username'])?>"></label></dd>
     </dl>
     <!-- Email -->
-    <dl><dt>Email</dt>
+    <dl><dt id="new_account">Email</dt>
         <dd><label><input type="email" name="email" value="<?php echo h($user['email'])?>"></label></dd>
     </dl>
     <!-- Password -->
-    <dl><dt>Password*</dt>
+    <dl><dt id="new_account">Password*</dt>
         <dd><label><input type="password" name="password"</label></dd>
     </dl>
-    <dl><dt>Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl><br>
+    <dl><dt id="new_account">Confirm Password</dt><dd><label><input type="password" name="password_confirm"</label></dd></dl><br>
     <!-- Submit -->
     <label><input type="submit" value="Create Account" id="button"</label>
 </form>

@@ -44,7 +44,7 @@ include(SHARED_PATH . '/header.php');
             <p id="range_value">1</p>
         </dd>
     </dl>
-    <input type="submit" value="Add Food" id="add_food_button"/>
+    <input type="submit" value="Add Food" id="button"/>
 </form>
 
 

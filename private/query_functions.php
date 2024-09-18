@@ -175,6 +175,7 @@ function find_food_by_user(string $time_frame): array {
     return $result;
 }
 
+// TODO -- Fix timezone issue
 function add_food(int $food_id, float $servings): bool {
     global $db;
 
@@ -189,6 +190,7 @@ function add_food(int $food_id, float $servings): bool {
     return $result;
 }
 
+// TODO -- Fix timezone issue
 function add_custom_food(array $food): bool {
     global $db;
 

@@ -1,55 +1,46 @@
 <?php
 
-// is_blank('abcd')
-// * validate data presence
-// * uses trim() so empty spaces don't count
-// * uses === to avoid false positives
-// * better than empty() which considers "0" to be empty
 function is_blank($value): bool {
     return !isset($value) || trim($value) === '';
 }
 
-// has_presence('abcd')
-// * validate data presence
-// * reverse of is_blank()
-// * I prefer validation names with "has_"
-function has_presence($value): bool {
-    return !is_blank($value);
-}
-
-// has_length_greater_than('abcd', 3)
-// * validate string length
-// * spaces count towards length
-// * use trim() if spaces should not count
-function has_length_greater_than($value, $min): bool {
+/**
+ * @param string $value String being tested
+ * @param int $min minimum length
+ * @return bool
+ */
+function has_length_greater_than(string $value, int $min): bool {
     $length = strlen($value);
     return $length > $min;
 }
 
-// has_length_less_than('abcd', 5)
-// * validate string length
-// * spaces count towards length
-// * use trim() if spaces should not count
-function has_length_less_than($value, $max): bool {
+/**
+ * @param string $value String being tested
+ * @param int $max maximum length
+ * @return bool
+ */
+function has_length_less_than(string $value, int $max): bool {
     $length = strlen($value);
     return $length < $max;
 }
 
-// has_length_exactly('abcd', 4)
-// * validate string length
-// * spaces count towards length
-// * use trim() if spaces should not count
-function has_length_exactly($value, $exact): bool {
+/**
+ * @param string $value String being tested
+ * @param int $exact Length being tested for
+ * @return bool
+ */
+function has_length_exactly(string $value, int $exact): bool {
     $length = strlen($value);
     return $length == $exact;
 }
 
-// has_length('abcd', ['min' => 3, 'max' => 5])
-// * validate string length
-// * combines functions_greater_than, _less_than, _exactly
-// * spaces count towards length
-// * use trim() if spaces should not count
-function has_length($value, $options): bool {
+/**
+ * Can test if a string is less than, greater than, or exactly a specific length given
+ * @param string $value String being tested
+ * @param array $options 'min', 'max', exact'
+ * @return bool
+ */
+function has_length(string $value, array $options): bool {
     if(isset($options['min']) && !has_length_greater_than($value, $options['min'] - 1)) {
         return false;
     } elseif(isset($options['max']) && !has_length_less_than($value, $options['max'] + 1)) {
@@ -61,44 +52,55 @@ function has_length($value, $options): bool {
     }
 }
 
-// has_inclusion_of( 5, [1,3,5,7,9] )
-// * validate inclusion in a set
-function has_inclusion_of($value, $set): bool {
+/**
+ * Tests if the value is contained within an array
+ * @param mixed $value Value being looked for
+ * @param array $set Array being looked in
+ * @return bool
+ */
+function has_inclusion_of(mixed $value, array $set): bool {
     return in_array($value, $set);
 }
 
-// has_exclusion_of( 5, [1,3,5,7,9] )
-// * validate exclusion from a set
-function has_exclusion_of($value, $set): bool {
+/**
+ * Tests if a value is not in an array
+ * @param mixed $value Value being tested for
+ * @param array $set Array being looked in
+ * @return bool
+ */
+function has_exclusion_of(mixed $value, array $set): bool {
     return !in_array($value, $set);
 }
 
-// has_string('nobody@nowhere.com', '.com')
-function has_string($value, $required_string): bool {
+/**
+ * Tests if a value is in the given string
+ * @param string $value Value being tested for
+ * @param string $required_string String being looked in
+ * @return bool
+ */
+function has_string(string $value, string $required_string): bool {
     return str_contains($value, $required_string);
 }
 
-// has_valid_email_format('nobody@nowhere.com')
-// * validate correct format for email addresses
-// * format: [chars]@[chars].[2+ letters]
-// * preg_match is helpful, uses a regular expression
-//    returns 1 for a match, 0 for no match
-//    http://php.net/manual/en/function.preg-match.php
-function has_valid_email_format($value): bool {
+/**
+ * @param string $value email being tested
+ * @return bool
+ */
+function has_valid_email_format(string $value): bool {
     $email_regex = '/\A[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\Z/i';
     return preg_match($email_regex, $value) === 1;
 }
 
-// has_unique_username('johnqpublic')
-// * Validates uniqueness of username
-// * For new records, provide only the username.
-// * For existing records, provide current ID as second argument
-//   has_unique_username('johnqpublic', 4)
-function has_unique_username($username, $current_id="0"): bool {
+/**
+ * Queries the database to ensure username given is unique
+ * @param string $username
+ * @return bool
+ */
+function has_unique_username(string $username): bool {
     global $db;
 
-    $stmt = $db->prepare("SELECT username FROM users WHERE username=? AND user_id !=?");
-    $stmt->bind_param("ss", $username, $current_id);
+    $stmt = $db->prepare("SELECT username FROM users WHERE username=?");
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
     $stmt->close();
@@ -108,11 +110,12 @@ function has_unique_username($username, $current_id="0"): bool {
     return $user_count === 0;
 }
 
-
-// has_unique_email('johnq@public.com')
-// * Validates uniqueness of email
-//   has_unique_username('johnq@public.com', )
-function has_unique_email($email): bool {
+/**
+ * Queries the database to ensure email address is unique
+ * @param string $email
+ * @return bool
+ */
+function has_unique_email(string $email): bool {
     global $db;
 
     $stmt = $db->prepare("SELECT email FROM users WHERE email=?");
@@ -126,15 +129,12 @@ function has_unique_email($email): bool {
     return $user_count === 0;
 }
 
-function validate_password(string $password, string $password_confirm): array {
-    $errors = array();
-
-
-
-    return $errors;
-}
-
-function validate_new_user($user): array {
+/**
+ * Returns an array of errors (if any) found when validating a new user account.
+ * @param array $user
+ * @return array
+ */
+function validate_new_user(array $user): array {
     $errors = array();
 
     // Username
@@ -157,6 +157,7 @@ function validate_new_user($user): array {
         $errors[] = "Email already exists.";
     }
 
+    // Password
     if (is_blank($user['password'])) {
         $errors[] = "Password cannot be blank.";
     } elseif (!has_length($user['password'], ['min' => 5, 'max' => 20])) {
@@ -181,7 +182,11 @@ function validate_new_user($user): array {
     return $errors;
 }
 
-function update_user() {
+/**
+ * Returns an array of errors (if any) found when validating an update to user profile.
+ * @return array
+ */
+function update_user(): array {
     global $errors;
 
     $updated_user[] = '';
@@ -201,8 +206,15 @@ function update_user() {
 
     } else if (password_verify($updated_user['password'], $user['password'])) {
 
+        // Username
         if ($updated_user['username'] != '') {
-            $errors = validate_username($updated_user['username']);
+
+            if (!has_length($updated_user['username'], ['min' => 5, 'max' => 50])) {
+                $errors[] = "Username must be between 5 and 50 characters.";
+            } elseif (!has_unique_username($updated_user['username'])) {
+                $errors[] = "Username already exists.";
+            }
+
             if (empty($errors)) {
                 $result = update_user_query('username', $updated_user['username']);
                 if ($result) {
@@ -214,8 +226,17 @@ function update_user() {
             }
         }
 
+        // Email
         if ($updated_user['email'] != '') {
-            $errors = validate_email($updated_user['email']);
+
+            if (!has_length($updated_user['email'], ['max' => 100])) {
+                $updated_user[] = "Email cannot be greater than 100 characters.";
+            } elseif (!has_valid_email_format($updated_user['email'])) {
+                $errors[] = "Invalid email format.";
+            } elseif (!has_unique_email($updated_user['email'])) {
+                $errors[] = "Email already exists.";
+            }
+
             if (empty($errors)) {
                 $result = update_user_query('email', $updated_user['email']);
                 if ($result) {
@@ -227,8 +248,28 @@ function update_user() {
             }
         }
 
+        // Password
         if ($updated_user['new_password'] != '') {
-            $errors = validate_password($updated_user['new_password'], $updated_user['confirm_password']);
+
+            if (!has_length($updated_user['new_password'], ['min' => 5, 'max' => 20])) {
+                $errors[] = "Password must be between 5 and 20 characters.";
+            } elseif (!preg_match('/[A-Z]/', $updated_user['new_password'])) {
+                $errors[] = "Password must contain at least 1 uppercase letter";
+            } elseif (!preg_match('/[a-z]/', $updated_user['new_password'])) {
+                $errors[] = "Password must contain at least 1 lowercase letter";
+            } elseif (!preg_match('/[0-9]/', $updated_user['new_password'])) {
+                $errors[] = "Password must contain at least 1 number";
+            } elseif (!preg_match('/[^A-Za-z0-9\s]/', $updated_user['new_password'])) {
+                $errors[] = "Password must contain at least 1 symbol";
+            }
+
+            // Confirm Password
+            if(is_blank($updated_user['password_confirm'])) {
+                $errors[] = "Confirm password cannot be blank.";
+            } elseif ($updated_user['password'] !== $updated_user['password_confirm']) {
+                $errors[] = "Password and confirm password must match.";
+            }
+
             if (empty($errors)) {
                 $hashed_password = password_hash($updated_user['new_password'], PASSWORD_DEFAULT);
                 $result = update_user_query('password', $hashed_password);

@@ -5,16 +5,16 @@ function login($user): true {
     session_regenerate_id(true);
     $_SESSION['username'] = $user['username'];
     $_SESSION['email'] = $user['email'];
+    $_SESSION['timezone'] = $user['timezone'];
 
-    // Params: name, value, expires, path, domain, secure, httponly
     setcookie(
-        'user_id',
-        $user['user_id'],
-        time() + $seconds_in_month,
-        null,
-        null,
-        true,
-        true
+        'user_id', // name
+        $user['user_id'], // value
+        time() + $seconds_in_month, // expiration
+        null, // path
+        null, // domain
+        true, // secure
+        true // http only
     );
 
     return true;
@@ -25,6 +25,7 @@ function logout(): true {
     unset($_COOKIE['user_id']);
     unset($_SESSION['username']);
     unset($_SESSION['email']);
+    unset($_SESSION['timezone']);
     session_destroy();
     return true;
 }

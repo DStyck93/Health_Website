@@ -193,12 +193,13 @@ function update_user(): array {
     $updated_user['username'] = $_POST['username'];
     $updated_user['password'] = $_POST["password"] ?? '';
     $updated_user['email'] = $_POST['email'] ?? '';
+    $updated_user['timezone'] = $_POST['timezone'] ?? '';
     $updated_user['new_password'] = $_POST['new_password'] ?? '';
     $updated_user['confirm_password'] = $_POST['confirm_password'] ?? '';
 
     $user = find_user_by_id($_COOKIE['user_id']);
 
-    if ($updated_user['username'] == '' && $updated_user['email'] == '' && $updated_user['new_password'] == '') {
+    if ($updated_user['username'] == '' && $updated_user['email'] == '' && $updated_user['new_password'] == '' && $updated_user['timezone'] == $_SESSION['timezone']) {
         $errors[] = "No values entered";
 
     } else if ($updated_user['password'] == '') {
@@ -245,6 +246,17 @@ function update_user(): array {
                 } else {
                     $errors[] = "An error occurred while updating your email.";
                 }
+            }
+        }
+
+        // Timezone
+        if ($updated_user['password'] != '') {
+            $result = update_user_query('timezone', $updated_user['timezone']);
+            if ($result) {
+                $_SESSION['message'] = "Timezone successfully updated.\n";
+                $_SESSION['timezone'] = $updated_user['timezone'];
+            } else {
+                $errors[] = "An error occurred while updating your timezone.";
             }
         }
 

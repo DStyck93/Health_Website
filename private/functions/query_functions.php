@@ -1,20 +1,21 @@
 <?php
-require_once 'initialize.php';
-
-// User
+// ********** User **********
 
 function add_user($user): array|bool {
     global $db;
 
+    // Validate user inputs
     $errors = validate_new_user($user);
     if (!empty($errors)) {
         return $errors;
     }
 
+    // Hash Password
     $hashed_password = password_hash($user['password'], PASSWORD_DEFAULT);
 
-    $stmt = $db -> prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt -> bind_param("sss", $user['username'], $user['email'], $hashed_password);
+    // Run Query
+    $stmt = $db -> prepare("INSERT INTO users (username, email, password, timezone) VALUES (?, ?, ?, ?)");
+    $stmt -> bind_param("ssss", $user['username'], $user['email'], $hashed_password, $user['timezone']);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;
@@ -66,7 +67,7 @@ function find_user_by_id($id): false|array|null {
     return $user;
 }
 
-// Food
+// ********** Food **********
 
 function find_all_food(): false|mysqli_result {
     global $db;
@@ -178,13 +179,15 @@ function find_food_by_user(string $time_frame): array {
 // TODO -- Fix timezone issue
 function add_food(int $food_id, float $servings): bool {
     global $db;
+    $default_timezone = "UTC";
 
-    // Store date as central
-    date_default_timezone_set("America/Chicago");
-    $date = date("Y-m-d H:i:s", time());
+    // Convert local time to UTC
+    $local_time = date("Y-m-d H:i:s", time()); // FIXME - Not accurate
 
+
+    // Add to database
     $stmt = $db -> prepare("INSERT INTO user_food (user_id, food_id, date_added, servings) VALUES (?, ?, ?, ?)");
-    $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $date, $servings);
+    $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $local_time, $servings);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;

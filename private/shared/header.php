@@ -12,7 +12,7 @@
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
 
     <!-- FIXME - Switch formats for production/development -->
-<!--    <link rel="stylesheet" href="--><?php //echo url_for('/stylesheets/style.css') . '?version=24'; ?><!--" /> -->
-    <link rel="stylesheet" href="<?php echo url_for('/stylesheets/style.css') . '?version=24'; ?>" />
+<!--    <link rel="stylesheet" href="--><?php //echo url_for('/stylesheets/style.css') . '?version=25'; ?><!--" /> -->
+    <link rel="stylesheet" href="<?php echo url_for('/stylesheets/style.css') . '?version=25'; ?>" />
 </head>
 <body>

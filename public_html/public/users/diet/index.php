@@ -1,5 +1,4 @@
 <!-- TODO - Limit to 50 results per page & add page selection -->
-<!-- TODO - Adjust for timezone conversions -->
 
 <?php
 require_once('../../../../private/initialize.php');
@@ -75,12 +74,7 @@ if (!empty($food_set)) { ?>
 
         <?php foreach ($food_set as $food) { ?>
             <tr>
-                <td>
-                    <?php
-                    $formatted_date = date("m/d H:i", strtotime(h($food['date_added'])));
-                    echo nl2br(h($formatted_date));
-                    ?>
-                </td>
+                <td><?php echo h(($food['date_added'])->format('M j')); ?></td>
                 <td id="long_text"><?php echo h($food['food_name']); ?></td>
                 <td id="table_number"><?php echo calculate_calories($food)?></td>
                 <td id="table_number"><?php echo h($food['carb']); ?></td>

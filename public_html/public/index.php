@@ -8,10 +8,6 @@ if (is_logged_in()) {
 include(SHARED_PATH . '/header.php');
 ?>
 
-<?php 
-// FIXME - Remove TEST CODE
-?>
-
 <h1 id="landing_header">Diet & Exercise</h1>
 
 <h2>Sign in to begin your health journey.</h2>

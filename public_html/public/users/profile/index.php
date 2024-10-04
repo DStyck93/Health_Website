@@ -53,13 +53,13 @@ include(SHARED_PATH . '/header.php');
         <dd><label><input type="password" id="form_input" placeholder="Confirm password" name="confirm_password"></label></dd>
     </dl>
     <!-- Submit -->
-    <input type="submit" value="Update Profile" id="button">
+    <input type="submit" value="Update Profile" id="edit_user_button">
 
 </form><br>
 
 <!-- Delete -->
 <form action="<?php echo url_for('/users/profile/delete.php') ?>" method="POST">
-    <input type="submit" value="Delete Profile" id="button">
+    <input type="submit" value="Delete Profile" id="edit_user_button">
 </form>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>

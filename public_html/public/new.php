@@ -39,7 +39,7 @@ include(SHARED_PATH . '/header.php');
 
 <a id="button" href="<?php echo url_for('index.php') ?>">&laquo; Back</a><br>
 
-<p>*Password must be at least 5 characters long and contain 1 uppercase, lowercase, and special character.</p>
+<p>*Password must be at least 5 characters long and contain at least 1 uppercase, lowercase, number, and special character.</p>
 
 <form action="" method="post">
     <!-- Username -->

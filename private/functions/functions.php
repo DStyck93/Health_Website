@@ -187,8 +187,77 @@ function local_to_utc(DateTime $datetime): DateTime {
  * Converts UTC timezone to local timezone
  */
 function utc_to_local(DateTime $datetime): DateTime {
-    $user_timezone = new DateTimeZone('America/Chicago'); // FIXME -- Swap with user's timezone
+    $user_timezone = new DateTimeZone($_SESSION['timezone']);
     return $datetime->setTimezone($user_timezone);
+}
+
+function filter_by_time_range(array $items, string $range): array {
+    $filtered_items = array();
+    foreach($items as $item) {
+        if(is_in_time_range($item, $range)) {
+            $filtered_items[] = $item;
+        }
+    }
+
+    return $filtered_items;
+}
+
+function is_in_time_range($item, string $range): bool {
+    date_default_timezone_set($_SESSION['timezone']);
+
+    // Get Month, Day, and Year values from today and item
+    $today_datetime = (new DateTime('now'))->format('n j Y'); // Format: 12 30 2024
+    $item_datetime = ($item['date_added'])->format('n j Y');
+    $today_datetime_values = explode(" ", $today_datetime);
+    $item_datetime_values = explode(" ", $item_datetime);
+    $today = array('month' => $today_datetime_values[0], 'day' => $today_datetime_values[1], 'year' => $today_datetime_values[2]);
+    $date = array('month' => $item_datetime_values[0], 'day' => $item_datetime_values[1], 'year' => $item_datetime_values[2]);
+
+    // Month
+    if ($range == 'month') {
+        return $today['month'] == $date['month'] && $today['year'] == $date['year']; // Month & Year match?
+
+    // Week (within 7 days)
+    } else if ($range == 'week') {
+
+        // Same year/month
+        if ($today['year'] == $date['year'] && $today['month'] == $date['month']) {
+            return (int)$today['day'] - (int)$date['day'] < 7;
+        }
+
+        // Within 1 month
+        if ($today['month'] == '1') { // January
+            if($date['month'] != '12' || (int)$today['year'] - (int)$date['year'] != 1) { return false; }
+        } else { // Any other month
+            if((int)$today['month'] - $date['month'] != 1 || $today['year'] != $date['year']) { return false; }
+        }
+
+        // Calculate days in month (leap year accounted for)
+        $days_in_month = 30;
+        switch((int)$date['month']) {
+            case 2: {
+                if(is_leap_year($date['year'])) {
+                    $days_in_month = 29; break;
+                }
+                $days_in_month = 28; break;
+            }
+            case 1:;
+            case 3:;
+            case 5:;
+            case 7:;
+            case 8:;
+            case 10:;
+            case 12: $days_in_month = 31; break;
+            default: $days_in_month = 30; break;
+        }
+
+        // Return true if within 7 days
+        return $days_in_month - (int)$date['day'] + (int)$today['day'] < 7;
+
+    // Day
+    } else {
+        return $today['month'] == $date['month'] && $today['day'] == $date['day'] && $today['year'] == $date['year']; // Month, Day, and Year match?
+    }
 }
 
 // ******************** Misc. ********************

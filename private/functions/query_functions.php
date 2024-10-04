@@ -123,13 +123,13 @@ function find_food_by_user(string $time_frame): array {
         WHERE users.user_id = $user_id AND user_food.date_added >= ";
 
     if ($time_frame == 'day' || $time_frame == '') {
-        $stmt = $db ->prepare($base_stmt . "CURRENT_DATE();");
-
-    } else if ($time_frame == 'week') {
         $stmt = $db ->prepare($base_stmt . "WEEK(CURRENT_DATE());");
 
-    } else {
+    } else if ($time_frame == 'week') {
         $stmt = $db ->prepare($base_stmt . "MONTH(CURRENT_DATE());");
+
+    } else {
+        $stmt = $db ->prepare($base_stmt . "YEAR(CURRENT_DATE());");
     }
     $stmt -> execute();
     $standard_result = $stmt -> get_result();
@@ -144,28 +144,36 @@ function find_food_by_user(string $time_frame): array {
         WHERE users.user_id = $user_id AND ";
 
     if ($time_frame == 'day') {
-        $stmt = $db ->prepare($base_stmt . "CURRENT_DATE();");
-
-    } else if ($time_frame == 'week' || $time_frame == '') {
         $stmt = $db ->prepare($base_stmt . "WEEK(CURRENT_DATE());");
 
-    } else {
+    } else if ($time_frame == 'week' || $time_frame == '') {
         $stmt = $db ->prepare($base_stmt . "MONTH(CURRENT_DATE());");
+
+    } else {
+        $stmt = $db ->prepare($base_stmt . "YEAR(CURRENT_DATE());");
     }
     $stmt -> execute();
     $custom_result = $stmt -> get_result();
     $stmt -> close();
 
+    // Create array of food based
     $result = array();
     foreach ($standard_result as $food) {
-        $result[] = array('date_added' => $food['date_added'], 'food_name' => $food['food_name'], 'carb' => $food['carb'],
+        date_default_timezone_set("UTC");
+        $utc = new DateTime($food['date_added']);
+        $local_datetime = utc_to_local($utc);
+        $result[] = array('date_added' => $local_datetime, 'food_name' => $food['food_name'], 'carb' => $food['carb'],
             'fat' => $food['fat'], 'protein' => $food['protein'], 'servings' => $food['servings'],
             'item_id' => $food['item_id']);
+        
     }
     mysqli_free_result($standard_result);
 
     foreach ($custom_result as $food) {
-        $result[] = array('date_added' => $food['date_added'], 'food_name' => $food['cf_name'], 'carb' => $food['carbs'],
+        date_default_timezone_set("UTC");
+        $utc = new DateTime($food['date_added']);
+        $local_datetime = utc_to_local($utc);;
+        $result[] = array('date_added' => $local_datetime, 'food_name' => $food['cf_name'], 'carb' => $food['carbs'],
             'fat' => $food['fat'], 'protein' => $food['protein'], 'servings' => $food['servings'],
             'item_id' => $food['item_id']);
     }
@@ -173,33 +181,34 @@ function find_food_by_user(string $time_frame): array {
 
     array_multisort(array_column($result, 'date_added'), SORT_DESC, $result);
 
-    return $result;
+    $filtered_result = filter_by_time_range($result, $time_frame);
+
+    return $filtered_result;
 }
 
-// TODO -- Fix timezone issue
 function add_food(int $food_id, float $servings): bool {
     global $db;
-    $default_timezone = "UTC";
 
-    // Convert local time to UTC
-    $local_time = date("Y-m-d H:i:s", time()); // FIXME - Not accurate
-
+    // Get current time in UTC
+    date_default_timezone_set("UTC");
+    $datetime = new DateTime('now');
+    $formatted_date = $datetime->format("Y-m-d H:i:s"); // MySQL DATETIME format
 
     // Add to database
     $stmt = $db -> prepare("INSERT INTO user_food (user_id, food_id, date_added, servings) VALUES (?, ?, ?, ?)");
-    $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $local_time, $servings);
+    $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $formatted_date, $servings);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;
 }
 
-// TODO -- Fix timezone issue
 function add_custom_food(array $food): bool {
     global $db;
 
-    // Store date as central
-    date_default_timezone_set("America/Chicago");
-    $date = date("Y-m-d h:m:s", time());
+    // Get current time in UTC
+    date_default_timezone_set("UTC");
+    $datetime = new DateTime('now');
+    $formatted_date = $datetime->format("Y-m-d H:i:s"); // MySQL DATETIME format
 
     // Create food item
     $stmt = $db -> prepare("INSERT INTO custom_food (user_id, cf_name, calories, carbs, fat, protein) VALUES (?, ?, ? , ?, ?, ?);");
@@ -212,7 +221,7 @@ function add_custom_food(array $food): bool {
         $food_id = mysqli_insert_id($db);
 
         $stmt = $db -> prepare("INSERT INTO user_food (user_id, custom_food_id, date_added, servings) VALUES (?, ?, ?, ?);");
-        $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $date, $food['servings']);
+        $stmt -> bind_param("iisd", $_COOKIE['user_id'], $food_id, $formatted_date, $food['servings']);
         $result = $stmt -> execute();
         $stmt -> close();
     }

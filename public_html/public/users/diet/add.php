@@ -41,7 +41,7 @@ include(SHARED_PATH . '/header.php');
 <!-- Search Bar -->
 <form action="<?php echo url_for('users/diet/add.php')?>" method="POST" id="search_bar">
     <label><input name='search' id="search_bar" type="search" placeholder="Lookup Food"/></label>
-    <input id="button" type="submit" value="Search"/>
+    <input id="search_button" type="submit" value="Search"/>
 </form>
 
 <!-- Search Table -->

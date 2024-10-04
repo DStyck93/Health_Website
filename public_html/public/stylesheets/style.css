@@ -89,18 +89,6 @@ select {
     width: 60pt;
 }
 
-#button {
-    width: 110pt;
-    font-size: 15pt;
-    cursor: pointer;
-}
-
-#table_button {
-    font-size: 13pt;
-    border: none;
-    background-color: #fdfbe0;
-}
-
 dt {
     float: left;
     font-weight: bold;
@@ -136,6 +124,30 @@ dt {
     margin-left: 100pt;
     margin-top: 1pt;
     margin-bottom: 1pt;
+}
+
+/* Buttons */
+
+#button {
+    font-size: 15pt;
+    cursor: pointer;
+}
+
+#edit_user_button {
+    width: 110pt;
+    font-size: 15pt;
+    cursor: pointer;
+}
+
+#search_button {
+    font-size: 15pt;
+    cursor: pointer;
+}
+
+#table_button {
+    font-size: 13pt;
+    border: none;
+    background-color: #fdfbe0;
 }
 
 
@@ -193,7 +205,7 @@ a.timeframe_nav {
 
 #search_bar {
     margin-bottom: 5pt;
-    font-size: 20pt;
+    font-size: 15pt;
 }
 
 #footer {

@@ -27,6 +27,7 @@ require_once('database.php');
 if(isset($_SESSION['timezone'])) {
     date_default_timezone_set($_SESSION['timezone']);
 } else {
+    $_SESSION['timezone'] = 'America/Chicago';
     date_default_timezone_set('America/Chicago');
 }
 

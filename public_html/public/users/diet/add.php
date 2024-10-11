@@ -2,8 +2,6 @@
 require_once('../../../../private/initialize.php');
 require_login();
 
-global $errors;
-
 // Search button clicked
 if (is_post_request()) {
     $food_name = $_POST['search'] ?? '';
@@ -98,8 +96,7 @@ include(SHARED_PATH . '/header.php');
 
     </table>
 
-<?php
-    mysqli_free_result($food_set);
+    <?php mysqli_free_result($food_set);
 }
 
 include(SHARED_PATH . '/footer.php');

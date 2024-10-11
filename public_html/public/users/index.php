@@ -24,7 +24,7 @@ echo display_errors($errors);
 echo "</br><p>" . display_message() . "</p>";
 ?>
 
-<!-- Timeframe selector -->
+<!-- Time frame selector -->
 <?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
 
 <?php if ($time_frame == 'day' || $time_frame == '') { ?><h2>Daily</h2>

@@ -238,3 +238,31 @@ function remove_food(int $id): bool {
     $stmt -> close();
     return $result;
 }
+
+// ********** Activities **********
+
+function find_activities($description='', $type='All'): false|mysqli_result {
+    global $db;
+    
+    $description = '%' . $description . '%'; // Change formatting for SQL
+
+    // All Activities
+    if ($type == 'All' && $description == '%%') {
+        $stmt = $db -> prepare("SELECT * FROM activities ORDER BY activity_type ASC, activity_code ASC;");
+
+    // All types with given description
+    } else if ($type == 'All') {
+        $stmt = $db -> prepare("SELECT * FROM activities WHERE activity_description LIKE ? ORDER BY activity_code ASC;");
+        $stmt -> bind_param("s", $description);
+    
+    // Specific type with given description
+    } else {
+        $stmt = $db -> prepare("SELECT * FROM activities WHERE activity_type = ? AND activity_description LIKE ? ORDER BY activity_code ASC;");
+        $stmt -> bind_param("ss", $type, $description);
+    }
+
+    $stmt -> execute();
+    $result = $stmt -> get_result();
+    $stmt -> close();
+    return $result;
+}

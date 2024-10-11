@@ -36,7 +36,7 @@ include(SHARED_PATH . '/header.php');
 echo "</br><p>" . display_message() . "</p>";
 ?>
 
-<!-- Timeframe Selector -->
+<!-- Time frame Selector -->
 <?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
 
 <!-- Nutrition Numbers -->

@@ -6,31 +6,16 @@ $page_title = 'Exercise';
 include(SHARED_PATH . '/header.php');
 ?>
 
-<h1>Exercise (Coming Soon!)</h1> <!-- TODO - Edit header -->
+<h1>Exercise</h1>
 
 <?php include(SHARED_PATH . '/navigation.php'); ?>
 
-<div id="row">
-    <div id="column">
-        <h2>Daily</h2>
-        <h3>Calories Burned:</h3>
-        <h3>Active Time:</h3>
-        <h3>Steps:</h3><br>
-    </div>
+<!-- Time frame Selector -->
+<?php include(SHARED_PATH . '/timeframe_selector.php'); ?><br>
 
-    <div id="column">
-        <h2>Weekly</h2>
-        <h3>Calories Burned:</h3>
-        <h3>Active Time:</h3>
-        <h3>Steps:</h3><br>
-    </div>
-
-    <div id="column">
-        <h2>Monthly</h2>
-        <h3>Calories Burned:</h3>
-        <h3>Active Time:</h3>
-        <h3>Steps:</h3><br>
-    </div>
-</div>
+<!-- Add Button -->
+<form action="<?php echo url_for('/users/exercise/add.php'); ?>">
+    <input type="submit" value="Add Activity" id="button"/>
+</form>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>

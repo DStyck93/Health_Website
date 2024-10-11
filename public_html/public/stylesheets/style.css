@@ -61,6 +61,10 @@ table.list tr th {
 
 /* Forms */
 
+#activity_type_selector {
+    width: 97pt;
+}
+
 #custom_food {
     width: 75pt;
 }

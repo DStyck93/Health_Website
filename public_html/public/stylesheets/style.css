@@ -65,6 +65,10 @@ table.list tr th {
     width: 97pt;
 }
 
+#exercise_dt {
+    width: 50pt;
+}
+
 #custom_food {
     width: 75pt;
 }

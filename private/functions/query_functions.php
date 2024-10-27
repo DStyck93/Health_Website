@@ -14,8 +14,8 @@ function add_user($user): array|bool {
     $hashed_password = password_hash($user['password'], PASSWORD_DEFAULT);
 
     // Run Query
-    $stmt = $db -> prepare("INSERT INTO users (username, email, password, timezone) VALUES (?, ?, ?, ?)");
-    $stmt -> bind_param("ssss", $user['username'], $user['email'], $hashed_password, $user['timezone']);
+    $stmt = $db -> prepare("INSERT INTO users (username, email, weight_pounds, password, timezone) VALUES (?, ?, ?, ?, ?)");
+    $stmt -> bind_param("ssiss", $user['username'], $user['email'], $user['weight'] ,$hashed_password, $user['timezone']);
     $result = $stmt -> execute();
     $stmt -> close();
     return $result;
@@ -172,7 +172,7 @@ function find_food_by_user(string $time_frame): array {
     foreach ($custom_result as $food) {
         date_default_timezone_set("UTC");
         $utc = new DateTime($food['date_added']);
-        $local_datetime = utc_to_local($utc);;
+        $local_datetime = utc_to_local($utc);
         $result[] = array('date_added' => $local_datetime, 'food_name' => $food['cf_name'], 'carb' => $food['carbs'],
             'fat' => $food['fat'], 'protein' => $food['protein'], 'servings' => $food['servings'],
             'item_id' => $food['item_id']);
@@ -265,4 +265,86 @@ function find_activities($description='', $type='All'): false|mysqli_result {
     $result = $stmt -> get_result();
     $stmt -> close();
     return $result;
+}
+
+// Formula provided by https://journals.lww.com/acsm-healthfitness/fulltext/2023/03000/metabolic_calculations_cases.4.aspx
+function calculate_calories_burned($MET, $kg, $minutes) {
+    return (float)$minutes * ((float)$MET * 3.5 * (float)$kg / 200.0);
+}
+
+// 1 lbs = 0.45359237 kg
+// Reference: https://www.unitconverters.net/weight-and-mass/lbs-to-kg.htm
+function convert_lbs_to_kg(float $lbs) {
+    return $lbs * 0.45359237;
+}
+
+function get_activity_by_id($id) {
+    global $db;
+
+    $stmt = $db -> prepare("SELECT * FROM activities WHERE activity_code = ? LIMIT 1");
+    $stmt -> bind_param("i", $id);
+    $stmt -> execute();
+    $result = $stmt -> get_result();
+    $stmt -> close();
+    $activity = $result -> fetch_assoc();
+    mysqli_free_result($result);
+    return $activity;
+}
+
+function add_activity(int $id, $MET, $minutes) {
+    global $db;
+    
+    // Calculate Calories Burned
+    $kg = convert_lbs_to_kg($_SESSION['weight']);
+    $calories_burned = (int)calculate_calories_burned($MET, $kg, $minutes);
+
+    // Get current time in UTC
+    date_default_timezone_set("UTC");
+    $datetime = new DateTime('now');
+    $date_added = $datetime->format("Y-m-d H:i:s"); // MySQL DATETIME format
+
+    // Add to user's log
+    $stmt = $db -> prepare("INSERT INTO user_activities (activity_code, user_id, minutes, calories_burned, date_added) VALUES(?, ?, ?, ?, ?)");
+    $stmt -> bind_param("iiiis", $id, $_COOKIE['user_id'], $minutes, $calories_burned, $date_added);
+    $result = $stmt -> execute();
+    $stmt -> close();
+    return $result;
+}
+
+function get_user_activities(string $time_frame): array {
+    global $db;
+
+    // Database Query
+    $stmt = $db -> prepare("SELECT calories_burned, date_added FROM user_activities WHERE user_id = ?");
+    $stmt -> bind_param("i", $_COOKIE['user_id']);
+    $stmt -> execute();
+    $result = $stmt -> get_result();
+    $stmt -> close();
+
+    // Convert mysqli result to associate array
+    // Change from UTC to Local time
+    $assoc = array();
+    while ($activity = mysqli_fetch_assoc($result)) {
+        date_default_timezone_set("UTC");
+        $utc = new DateTime($activity['date_added']);
+        $local_time = utc_to_local($utc);
+
+        $assoc[] = array('calories_burned' => $activity['calories_burned'], 'date_added' => $local_time);
+    }
+
+    // Filter by time frame
+    $filtered_results = filter_by_time_range($assoc, $time_frame);
+
+    return $filtered_results;
+}
+
+//TODO - Account for BMR
+function get_total_calories_burned(array $activities) {
+
+    $total_calories = 0;
+    foreach ($activities as $activity) {
+        $total_calories += $activity['calories_burned'];
+    }
+
+    return $total_calories;
 }

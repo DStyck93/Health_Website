@@ -40,9 +40,8 @@ echo "</br><p>" . display_message() . "</p>";
 <?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
 
 <!-- Nutrition Numbers -->
-
 <?php if($time_frame =='day' || $time_frame == '') { ?><h2>Daily</h2>
-<?php } else if($time_frame == 'week') { ?><h2>Weekly</h2>
+<?php } elseif ($time_frame == 'week') { ?><h2>Weekly</h2>
 <?php } else { ?><h2>Monthly</h2><?php } ?>
 
 <h3>Calories: <?php echo h($calories) ?></h3>
@@ -89,7 +88,9 @@ if (!empty($food_set)) { ?>
                     </form>
                 </td>
             </tr>
-        <?php } ?>
+        <?php 
+        }
+        ?>
 
     </table>
 

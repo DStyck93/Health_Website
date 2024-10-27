@@ -23,16 +23,20 @@ include(SHARED_PATH . '/header.php');
 <!-- Form -->
 <form action="<?php echo url_for('/users/profile/index.php') ?>" method="POST">
     <!-- Username -->    
-    <dl><dt id="edit_profile">Username</dt>
-        <dd><label><input type="text" id="form_input" placeholder="<?php echo h($_SESSION['username']); ?>" name="username"></label></dd>
-    </dl>
+    <dl><dt id="edit_profile">Username</dt><dd>
+        <input type="text" id="form_input" placeholder="<?php echo h($_SESSION['username']); ?>" name="username"/>
+    </dd></dl>
     <!-- Email -->
-    <dl><dt id="edit_profile">Email</dt>
-        <dd><label><input type="text" id="form_input" placeholder="<?php echo h($_SESSION['email']); ?>" name="email"></label></dd>
-    </dl>
+    <dl><dt id="edit_profile">Email</dt><dd>
+        <input type="text" id="form_input" placeholder="<?php echo h($_SESSION['email']); ?>" name="email"/>
+    </dd></dl>
+    <!-- Weight -->
+    <dl><dt id="edit_profile">Weight (lbs)</dt><dd>
+        <input type="number" id="form_input" placeholder="<?php echo h($_SESSION['weight']);?>" name="weight"/>
+    </dd></dl>
     <!-- Timezone -->
-    <dl><dt id="edit_profile">Timezone (USA)</dt>
-        <dd><select name="timezone">
+    <dl><dt id="edit_profile">Timezone (USA)</dt><dd>
+        <select name="timezone">
             <option value="America/New_York" <?php if(h($_SESSION['timezone']) == 'America/New_York') echo "selected=\"selected\" ";?>>Eastern</option>
             <option value="America/Chicago" <?php if(h($_SESSION['timezone']) == 'America/Chicago') echo "selected=\"selected\" ";?>>Central</option>
             <option value="America/Denver" <?php if(h($_SESSION['timezone']) == 'America/Denver') echo "selected=\"selected\" ";?>>Mountain</option>
@@ -41,25 +45,25 @@ include(SHARED_PATH . '/header.php');
             <option value="America/Anchorage" <?php if(h($_SESSION['timezone']) == 'America/Anchorage') echo "selected=\"selected\" ";?>>Alaska</option>
             <option value="Pacific/Honolulu" <?php if(h($_SESSION['timezone']) == 'Pacific/Honolulu') echo "selected=\"selected\" ";?>>Hawaii</option>
         </select>
-    </dl>
+    </dd></dl>
     <!-- Password -->
-    <dl><dt id="edit_profile">Password</dt>
-        <dd><label><input type="password" id="form_input" placeholder="Enter your password" name="password"></label></dd>
-    </dl>
-    <dl><dt id="edit_profile">New Password</dt>
-        <dd><label><input type="password" id="form_input" placeholder="New password" name="new_password"></label></dd>
-    </dl>
-    <dl><dt id="edit_profile">Confirm Password</dt>
-        <dd><label><input type="password" id="form_input" placeholder="Confirm password" name="confirm_password"></label></dd>
-    </dl>
+    <dl><dt id="edit_profile">Password</dt><dd>
+        <input type="password" id="form_input" placeholder="Enter your password" name="password"/>
+    </dd></dl>
+    <dl><dt id="edit_profile">New Password</dt><dd>
+        <input type="password" id="form_input" placeholder="New password" name="new_password"/>
+    </dd></dl>
+    <dl><dt id="edit_profile">Confirm Password</dt><dd>
+        <input type="password" id="form_input" placeholder="Confirm password" name="confirm_password"/>
+    </dd></dl>
     <!-- Submit -->
-    <input type="submit" value="Update Profile" id="edit_user_button">
+    <input type="submit" value="Update Profile" id="edit_user_button"/>
 
 </form><br>
 
 <!-- Delete -->
 <form action="<?php echo url_for('/users/profile/delete.php') ?>" method="POST">
-    <input type="submit" value="Delete Profile" id="edit_user_button">
+    <input type="submit" value="Delete Profile" id="edit_user_button"/>
 </form>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>

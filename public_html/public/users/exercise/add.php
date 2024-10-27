@@ -20,9 +20,12 @@ include(SHARED_PATH . '/header.php');
 <!-- Nav Bar -->
 <?php include(SHARED_PATH . '/navigation.php'); ?>
 
+<!-- Back Link -->
+<p id="button"><a href="<?php echo url_for('/users/exercise/index.php') ?>">&laquo; Back</a>
+
 <!-- Messages -->
 <?php echo "<br>" . display_errors($errors);?>
-<p><?php display_message() ?></p>
+<?php display_message() ?></p>
 
 <!-- Search Function -->
 <form action="<?php echo url_for('users/exercise/add.php')?>" method="POST" id="search_bar">
@@ -43,7 +46,7 @@ include(SHARED_PATH . '/header.php');
     </select></dd></dl>
 </form>
 
-<!-- Search Table -->
+<!-- Table -->
 <?php if (!empty($activity_set) && mysqli_num_rows($activity_set) > 0) { ?>
 
     <table class="list">
@@ -60,10 +63,9 @@ include(SHARED_PATH . '/header.php');
                 <td><?php echo h($activity['activity_description']); ?></td>
                 <td id="table_number"><?php echo h($activity['MET']); ?></td>
                 <td id="table_number">
-                    <form action="<?php echo url_for('/users/exercise/details.php')?>"
-                        method="POST">
-                        <input type="hidden" name="id" value="<?php echo h($activity['activity_code']); ?>">
-                        <input type="submit" name="add" value="Add" id="table_button"/>
+                    <form action="<?php echo url_for('/users/exercise/details.php')?>" method="POST">
+                        <input type="hidden" name="id" value="<?php echo $activity['activity_code'];?>"/>
+                        <input type="submit" value="Add" id="table_button"/>
                     </form>
                 </td>
             </tr>

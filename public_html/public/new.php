@@ -9,6 +9,7 @@ if(is_post_request()) {
     // Get data from form
     $user['username'] = $_POST['username'] ?? '';
     $user['email'] = $_POST['email'] ?? '';
+    $user['weight'] = $_POST['weight'] ?? '';
     $user['timezone'] = $_POST['timezone'] ?? '';
     $user['password'] = $_POST['password'] ?? '';
     $user['password_confirm'] = $_POST['password_confirm'] ?? '';
@@ -26,6 +27,7 @@ if(is_post_request()) {
 } else { // display the blank form
     $user["username"] = '';
     $user["email"] = '';
+    $user["weight"] = '';
     $user["password"] = '';
 }
 
@@ -43,16 +45,20 @@ include(SHARED_PATH . '/header.php');
 
 <form action="" method="post">
     <!-- Username -->
-    <dl><dt id="new_account">Username</dt>
-        <dd><input type="text" name="username" value="<?php echo h($user['username'])?>"></dd>
-    </dl>
+    <dl><dt id="new_account">Username</dt><dd>
+        <input type="text" name="username" value="<?php echo h($user['username']);?>"/>
+    </dd></dl>
     <!-- Email -->
-    <dl><dt id="new_account">Email</dt>
-        <dd><input type="email" name="email" value="<?php echo h($user['email'])?>"></dd>
-    </dl>
+    <dl><dt id="new_account">Email</dt><dd>
+        <input type="email" name="email" value="<?php echo h($user['email']);?>"/>
+    </dd></dl>
+    <!-- Weight -->
+    <dl><dt id="new_account">Weight (lbs)</dt><dd>
+        <input type="number" name="weight" value="<?php echo h($user['weight']);?>"/>
+    </dd></dl>
     <!-- Timezone -->
-    <dl><dt id="new_account">Timezone (USA)</dt>
-        <dd><select name="timezone">
+    <dl><dt id="new_account">Timezone (USA)</dt><dd>
+        <select name="timezone">
             <option value="America/New_York" <?php if(h($user['timezone']) == 'America/New_York') echo "selected=\"selected\" ";?>>Eastern</option>
             <option value="America/Chicago" <?php if(h($user['timezone']) == 'America/Chicago') echo "selected=\"selected\" ";?>>Central</option>
             <option value="America/Denver" <?php if(h($user['timezone']) == 'America/Denver') echo "selected=\"selected\" ";?>>Mountain</option>
@@ -61,11 +67,9 @@ include(SHARED_PATH . '/header.php');
             <option value="America/Anchorage" <?php if(h($user['timezone']) == 'America/Anchorage') echo "selected=\"selected\" ";?>>Alaska</option>
             <option value="Pacific/Honolulu" <?php if(h($user['timezone']) == 'Pacific/Honolulu') echo "selected=\"selected\" ";?>>Hawaii</option>
         </select>
-    </dl>
+    </dd></dl>
     <!-- Password -->
-    <dl><dt id="new_account">Password*</dt>
-        <dd><input type="password" name="password"></dd>
-    </dl>
+    <dl><dt id="new_account">Password*</dt><dd><input type="password" name="password"></dd></dl>
     <dl><dt id="new_account">Confirm Password</dt><dd><input type="password" name="password_confirm"></dd></dl><br>
     <!-- Submit -->
     <input type="submit" value="Create Account" id="button">

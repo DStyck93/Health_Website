@@ -85,9 +85,8 @@ include(SHARED_PATH . '/header.php');
                     ?>
                 </td>
                 <td id="table_number">
-                    <form action="<?php echo url_for('/users/diet/serving.php')?>"
-                          method="POST">
-                        <input type="hidden" name="id" value="<?php echo h($food['food_id']); ?>">
+                    <form action="<?php echo url_for('/users/diet/serving.php')?>" method="POST">
+                        <input type="hidden" name="id" value="<?php echo h($food['food_id']); ?>"/>
                         <input type="submit" name="add" value="Add" id="table_button"/>
                     </form>
                 </td>

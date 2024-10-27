@@ -11,6 +11,6 @@
     <meta name="author" content="D.Styx">
     <meta name="viewport" content="width-device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="<?php echo url_for('/stylesheets/style.css') . '?version=1.1'; ?>" />
+    <link rel="stylesheet" href="<?php echo url_for('/stylesheets/style.css') . '?version=1.2'; ?>" />
 </head>
 <body>

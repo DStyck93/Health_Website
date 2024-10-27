@@ -33,15 +33,11 @@ include(SHARED_PATH . '/header.php');
 
 <form method="post">
     <!-- Username -->
-    <dl><dt id="sign_in">Username</dt>
-        <dd><label><input type="text" name="username"></label></dd>
-    </dl>
+    <dl><dt id="sign_in">Username</dt><dd><input type="text" name="username"/></dd></dl>
     <!-- Password -->
-    <dl><dt id="sign_in">Password</dt>
-        <dd><label><input type="password" name="password"</label></dd>
-    </dl>
+    <dl><dt id="sign_in">Password</dt><dd><input type="password" name="password"/></dd></dl>
     <!-- Submit Button -->
-    <label><input type="submit" value="Sign In" id="button"></label>
+    <input type="submit" value="Sign In" id="button"/>
 </form>
 
 <?php include(SHARED_PATH . '/footer.php');?>

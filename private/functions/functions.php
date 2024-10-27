@@ -202,12 +202,13 @@ function filter_by_time_range(array $items, string $range): array {
     return $filtered_items;
 }
 
+//TODO - Alter to: 1, 7, or 30 days.
 function is_in_time_range($item, string $range): bool {
     date_default_timezone_set($_SESSION['timezone']);
 
     // Get Month, Day, and Year values from today and item
-    $today_datetime = (new DateTime('now'))->format('n j Y'); // Format: 12 30 2024
-    $item_datetime = ($item['date_added'])->format('n j Y');
+    $today_datetime = (new DateTime('now')) -> format('n j Y'); // Format: 12 30 2024
+    $item_datetime = ($item['date_added']) -> format('n j Y');
     $today_datetime_values = explode(" ", $today_datetime);
     $item_datetime_values = explode(" ", $item_datetime);
     $today = array('month' => $today_datetime_values[0], 'day' => $today_datetime_values[1], 'year' => $today_datetime_values[2]);

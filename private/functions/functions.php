@@ -202,11 +202,10 @@ function filter_by_time_range(array $items, string $range): array {
     return $filtered_items;
 }
 
-//TODO - Alter to: 1, 7, or 30 days.
 function is_in_time_range($item, string $range): bool {
     date_default_timezone_set($_SESSION['timezone']);
 
-    // Get Month, Day, and Year values from today and item
+    // // Get Month, Day, and Year values from today and item
     $today_datetime = (new DateTime('now')) -> format('n j Y'); // Format: 12 30 2024
     $item_datetime = ($item['date_added']) -> format('n j Y');
     $today_datetime_values = explode(" ", $today_datetime);
@@ -214,51 +213,87 @@ function is_in_time_range($item, string $range): bool {
     $today = array('month' => $today_datetime_values[0], 'day' => $today_datetime_values[1], 'year' => $today_datetime_values[2]);
     $date = array('month' => $item_datetime_values[0], 'day' => $item_datetime_values[1], 'year' => $item_datetime_values[2]);
 
+    // Unix time for today
+    $item_date = ($item['date_added']) -> format('U');
+
     // Month
+    $seconds_in_day = 60 * 60 * 24;
+    $seconds_in_week = $seconds_in_day * 7;
+    $seconds_in_month = $seconds_in_day * 30;
     if ($range == 'month') {
-        return $today['month'] == $date['month'] && $today['year'] == $date['year']; // Month & Year match?
+        return (time() - $seconds_in_month) <= $item_date;
+
+        // DEPRECIATED - Used to calculate for current month (not 30 days)
+        // return $today['month'] == $date['month'] && $today['year'] == $date['year']; // Month & Year match?
 
     // Week (within 7 days)
+    
     } else if ($range == 'week') {
+        return (time() - $seconds_in_week) <= $item_date;
 
+        // DEPRECIATED - Used to calculate for current week (not 7 days)
         // Same year/month
-        if ($today['year'] == $date['year'] && $today['month'] == $date['month']) {
-            return (int)$today['day'] - (int)$date['day'] < 7;
-        }
+        // if ($today['year'] == $date['year'] && $today['month'] == $date['month']) {
+        //     return (int)$today['day'] - (int)$date['day'] < 7;
+        // }
 
-        // Within 1 month
-        if ($today['month'] == '1') { // January
-            if($date['month'] != '12' || (int)$today['year'] - (int)$date['year'] != 1) { return false; }
-        } else { // Any other month
-            if((int)$today['month'] - $date['month'] != 1 || $today['year'] != $date['year']) { return false; }
-        }
+        // // Within 1 month
+        // if ($today['month'] == '1') { // January
+        //     if($date['month'] != '12' || (int)$today['year'] - (int)$date['year'] != 1) { return false; }
+        // } else { // Any other month
+        //     if((int)$today['month'] - $date['month'] != 1 || $today['year'] != $date['year']) { return false; }
+        // }
 
-        // Calculate days in month (leap year accounted for)
-        $days_in_month = 30;
-        switch((int)$date['month']) {
-            case 2: {
-                if(is_leap_year($date['year'])) {
-                    $days_in_month = 29; break;
-                }
-                $days_in_month = 28; break;
-            }
-            case 1:;
-            case 3:;
-            case 5:;
-            case 7:;
-            case 8:;
-            case 10:;
-            case 12: $days_in_month = 31; break;
-            default: $days_in_month = 30; break;
-        }
+        // // Calculate days in month (leap year accounted for)
+        // $days_in_month = 30;
+        // switch((int)$date['month']) {
+        //     case 2: {
+        //         if(is_leap_year($date['year'])) {
+        //             $days_in_month = 29; break;
+        //         }
+        //         $days_in_month = 28; break;
+        //     }
+        //     case 1:;
+        //     case 3:;
+        //     case 5:;
+        //     case 7:;
+        //     case 8:;
+        //     case 10:;
+        //     case 12: $days_in_month = 31; break;
+        //     default: $days_in_month = 30; break;
+        // }
 
-        // Return true if within 7 days
-        return $days_in_month - (int)$date['day'] + (int)$today['day'] < 7;
+        // // Return true if within 7 days
+        // return $days_in_month - (int)$date['day'] + (int)$today['day'] < 7;
 
     // Day
     } else {
         return $today['month'] == $date['month'] && $today['day'] == $date['day'] && $today['year'] == $date['year']; // Month, Day, and Year match?
     }
+}
+
+// ******************** Activities ********************
+
+// Formula provided by https://journals.lww.com/acsm-healthfitness/fulltext/2023/03000/metabolic_calculations_cases.4.aspx
+function calculate_calories_burned($MET, $kg, $minutes) {
+    return (float)$minutes * ((float)$MET * 3.5 * (float)$kg / 200.0);
+}
+
+// 1 lbs = 0.45359237 kg
+// Reference: https://www.unitconverters.net/weight-and-mass/lbs-to-kg.htm
+function convert_lbs_to_kg(float $lbs) {
+    return $lbs * 0.45359237;
+}
+
+// TODO - Account for BMR
+function get_total_calories_burned(array $activities) {
+
+    $total_calories = 0;
+    foreach ($activities as $activity) {
+        $total_calories += $activity['calories'];
+    }
+
+    return $total_calories;
 }
 
 // ******************** Misc. ********************

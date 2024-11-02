@@ -28,6 +28,7 @@ if(is_post_request()) {
     $user["username"] = '';
     $user["email"] = '';
     $user["weight"] = '';
+    $user["timezone"] = 'America/Chicago';
     $user["password"] = '';
 }
 

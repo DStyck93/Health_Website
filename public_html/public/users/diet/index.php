@@ -37,7 +37,7 @@ echo "</br><p>" . display_message() . "</p>";
 ?>
 
 <!-- Time frame Selector -->
-<?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
+<?php include(SHARED_PATH . '/timeframe_selector.php'); ?><br>
 
 <!-- Nutrition Numbers -->
 <?php if($time_frame =='day' || $time_frame == '') { ?><h2>Daily</h2>
@@ -49,13 +49,16 @@ echo "</br><p>" . display_message() . "</p>";
 <h4>Fats: <?php echo h($total_nutrition['fat']) ?></h4>
 <h4>Protein: <?php echo h($total_nutrition['protein']) ?></h4>
 
-<!-- Add Food Button -->
-<form action="<?php echo url_for('/users/diet/add.php'); ?>">
-    <input type="submit" value="Add Food" id="button"/>
-</form>
+<hr size=3 color="black">
 
 <!-- User Food Table -->
 <h2 id="table_title">Your Food</h2>
+
+<!-- Add Food Button -->
+<form action="<?php echo url_for('/users/diet/add.php'); ?>">
+    <input type="submit" value="Add Food" id="button"/>
+</form><br>
+
 <?php
 if (!empty($food_set)) { ?>
 
@@ -97,7 +100,7 @@ if (!empty($food_set)) { ?>
     <?php
 
 } else {
-    echo "<p>You have no food added.</p>";
+    echo "<p>You have no food recorded for this time frame.</p>";
 }
 ?>
 

@@ -4,11 +4,12 @@ function login($user): true {
     session_regenerate_id(true);
     $_SESSION['username'] = $user['username'];
     $_SESSION['email'] = $user['email'];
-    $_SESSION['weight'] = $user['weight_pounds'];
+    $_SESSION['weight'] = $user['weight_pounds'] ?? 0;
     $_SESSION['timezone'] = $user['timezone'];
 
     $seconds_in_month = 60 * 60 * 24 * 30;
-    setcookie('user_id', $user['user_id'], time() + $seconds_in_month, null, null, true, true);
+    $expiration = time() + $seconds_in_month;
+    setcookie('user_id', $user['user_id'], $expiration, null, null, true, true);
 
     return true;
 }
@@ -36,8 +37,9 @@ function require_login(): void {
         $user = find_user_by_id($_COOKIE['user_id']);
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
-        $_SESSION['email'] = $user['weight_pounds'];
+        $_SESSION['weight'] = $user['weight_pounds'];
         $_SESSION['hashed_password'] = $user['password'];
+        $_SESSION['timezone'] = $user['timezone'];
     }
 }
 ?>

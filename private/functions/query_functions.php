@@ -267,17 +267,6 @@ function find_activities($description='', $type='All'): false|mysqli_result {
     return $result;
 }
 
-// Formula provided by https://journals.lww.com/acsm-healthfitness/fulltext/2023/03000/metabolic_calculations_cases.4.aspx
-function calculate_calories_burned($MET, $kg, $minutes) {
-    return (float)$minutes * ((float)$MET * 3.5 * (float)$kg / 200.0);
-}
-
-// 1 lbs = 0.45359237 kg
-// Reference: https://www.unitconverters.net/weight-and-mass/lbs-to-kg.htm
-function convert_lbs_to_kg(float $lbs) {
-    return $lbs * 0.45359237;
-}
-
 function get_activity_by_id($id) {
     global $db;
 
@@ -296,7 +285,7 @@ function add_activity(int $id, $MET, $minutes) {
     
     // Calculate Calories Burned
     $kg = convert_lbs_to_kg($_SESSION['weight']);
-    $calories_burned = (int)calculate_calories_burned($MET, $kg, $minutes);
+    $calories_burned = (int)calculate_calories_burned($MET - 1.0, $kg, $minutes); // -1 from MET to account for BMR
 
     // Get current time in UTC
     date_default_timezone_set("UTC");
@@ -311,11 +300,25 @@ function add_activity(int $id, $MET, $minutes) {
     return $result;
 }
 
+function remove_activity(int $id) {
+    global $db;
+
+    $stmt = $db -> prepare("DELETE FROM user_activities WHERE user_activity_id = ?");
+    $stmt -> bind_param("i", $id);
+    $result = $stmt -> execute();
+    $stmt -> close();
+    return $result;
+}
+
 function get_user_activities(string $time_frame): array {
     global $db;
 
-    // Database Query
-    $stmt = $db -> prepare("SELECT calories_burned, date_added FROM user_activities WHERE user_id = ?");
+    // SQL prepared statement
+    $stmt = $db -> prepare("SELECT u.user_activity_id, u.activity_code, a.activity_description, u.minutes, u.calories_burned, u.date_added FROM user_activities AS u 
+                            INNER JOIN activities AS a ON u.activity_code = a.activity_code
+                            WHERE user_id = ?;");
+
+    // Execute Query
     $stmt -> bind_param("i", $_COOKIE['user_id']);
     $stmt -> execute();
     $result = $stmt -> get_result();
@@ -329,22 +332,11 @@ function get_user_activities(string $time_frame): array {
         $utc = new DateTime($activity['date_added']);
         $local_time = utc_to_local($utc);
 
-        $assoc[] = array('calories_burned' => $activity['calories_burned'], 'date_added' => $local_time);
+        $assoc[] = array('calories' => $activity['calories_burned'], 'date_added' => $local_time, 'id' => $activity['user_activity_id'], 'code' => $activity['activity_code'], 'description' => $activity['activity_description'], 'minutes' => $activity['minutes']);
     }
 
     // Filter by time frame
     $filtered_results = filter_by_time_range($assoc, $time_frame);
 
     return $filtered_results;
-}
-
-//TODO - Account for BMR
-function get_total_calories_burned(array $activities) {
-
-    $total_calories = 0;
-    foreach ($activities as $activity) {
-        $total_calories += $activity['calories_burned'];
-    }
-
-    return $total_calories;
 }

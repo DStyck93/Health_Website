@@ -221,116 +221,122 @@ function update_user(): array {
     $username = $_POST['username'];
     $email = $_POST['email'] ?? '';
     $weight = $_POST['weight'] ?? '';
-    $timezone = $_POST['timezone'] ?? '';
     $old_password = $_POST["password"] ?? '';
     $new_password = $_POST['new_password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
-    $user = find_user_by_id($_COOKIE['user_id']);
+    $timezone = $_POST['timezone'] ?? '';
+    if ($timezone == $_SESSION["timezone"]) {
+        $timezone = '';
+    }
 
-    if ($username == '' && $email == '' && $new_password == '' && $timezone == $_SESSION['timezone']) {
+    if ($username == '' && $email == '' && $new_password == '' && $timezone == '' && $weight == '') {
         $errors[] = "No values entered";
+        return $errors;
+    }
 
-    } else if ($old_password == '') {
-        $errors[] = "You must enter your password.";
+    // Username
+    if ($username != '') {
 
-    } else if (password_verify($old_password, $user['password'])) {
-
-        // Username
-        if ($username != '') {
-
-            // Validate Length
-            if (!has_length($username, ['min' => 5, 'max' => 50])) {
-                $errors[] = "Username must be between 5 and 50 characters.";
-            } 
-            
-            // Validate uniqueness
-            elseif (!has_unique_username($username)) {
-                $errors[] = "Username already exists.";
-            }
-
-            // No errors, update user
-            if (empty($errors)) {
-                $result = update_user_query('username', $username);
-                if ($result) {
-                    $_SESSION['message'] = "Username successfully updated.\n";
-                    $_SESSION['username'] = $username;
-                } else {
-                    $errors[] = "An error occurred while updating your username.";
-                }
-            }
+        // Validate Length
+        if (!has_length($username, ['min' => 5, 'max' => 50])) {
+            $errors[] = "Username must be between 5 and 50 characters.";
+        } 
+        
+        // Validate uniqueness
+        elseif (!has_unique_username($username)) {
+            $errors[] = "Username already exists.";
         }
 
-        // Email
-        if ($email != '') {
-
-            // Validate Length
-            if (!has_length($email, ['max' => 100])) {
-                $errors[] = "Email cannot be greater than 100 characters.";
-            } 
-            
-            // Validate Format
-            elseif (!has_valid_email_format($email)) {
-                $errors[] = "Invalid email format.";
-            } 
-            
-            // Validate Uniqueness
-            elseif (!has_unique_email($email)) {
-                $errors[] = "Email already exists.";
-            }
-
-            // No errors, update user
-            if (empty($errors)) {
-                $result = update_user_query('email', $email);
-                if ($result) {
-                    $_SESSION['message'] = "Email successfully updated.\n";
-                    $_SESSION['email'] = $email;
-                } else {
-                    $errors[] = "An error occurred while updating your email.";
-                }
-            }
-        }
-
-        // Weight
-        if ($weight != '') {
-
-            // Validate Max Weight
-            if ($weight > USER_MAX_WEIGHT) {
-                $errors[] = "Max weight is " . USER_MAX_WEIGHT . " lbs.";
-            }
-            
-            // Validate Min Weight
-            elseif ($weight <= 0) {
-                $errors[] = "Weight must be greater than 0 lbs.";
-            }
-
-            // No Errors, update user
-            if (empty($errors)) {
-                $result = update_user_query('weight_pounds', $weight);
-                if ($result) {
-                    $_SESSION['message'] = "Weight was successfully updated.\n";
-                    $_SESSION['weight'] = $weight;
-                } else {
-                    $errors[] = "An error occurred while updating your weight.";
-                }
-            }
-        }
-
-        // Timezone
-        if ($timezone != '') {
-            $result = update_user_query('timezone', $timezone);
+        // No errors, update user
+        if (empty($errors)) {
+            $result = update_user_query('username', $username);
             if ($result) {
-                $_SESSION['message'] = "Timezone successfully updated.\n";
-                $_SESSION['timezone'] = $timezone;
+                $_SESSION['message'] = "Username successfully updated.\n";
+                $_SESSION['username'] = $username;
             } else {
-                $errors[] = "An error occurred while updating your timezone.";
+                $errors[] = "An error occurred while updating your username.";
             }
         }
+    }
 
-        // Password
-        if ($new_password != '') {
+    // Email
+    if ($email != '') {
 
-            // Validate password
+        // Validate Length
+        if (!has_length($email, ['max' => 100])) {
+            $errors[] = "Email cannot be greater than 100 characters.";
+        } 
+        
+        // Validate Format
+        elseif (!has_valid_email_format($email)) {
+            $errors[] = "Invalid email format.";
+        } 
+        
+        // Validate Uniqueness
+        elseif (!has_unique_email($email)) {
+            $errors[] = "Email already exists.";
+        }
+
+        // No errors, update user
+        if (empty($errors)) {
+            $result = update_user_query('email', $email);
+            if ($result) {
+                $_SESSION['message'] = "Email successfully updated.\n";
+                $_SESSION['email'] = $email;
+            } else {
+                $errors[] = "An error occurred while updating your email.";
+            }
+        }
+    }
+
+    // Weight
+    if ($weight != '') {
+
+        // Validate Max Weight
+        if ($weight > USER_MAX_WEIGHT) {
+            $errors[] = "Max weight is " . USER_MAX_WEIGHT . " lbs.";
+        }
+        
+        // Validate Min Weight
+        elseif ($weight <= 0) {
+            $errors[] = "Weight must be greater than 0 lbs.";
+        }
+
+        // No Errors, update user
+        if (empty($errors)) {
+            $result = update_user_query('weight_pounds', $weight);
+            if ($result) {
+                $_SESSION['message'] = "Weight was successfully updated.\n";
+                $_SESSION['weight'] = $weight;
+            } else {
+                $errors[] = "An error occurred while updating your weight.";
+            }
+        }
+    }
+
+    // Timezone
+    if ($timezone != '') {
+        $result = update_user_query('timezone', $timezone);
+        if ($result) {
+            $_SESSION['message'] = "Timezone successfully updated.\n";
+            $_SESSION['timezone'] = $timezone;
+        } else {
+            $errors[] = "An error occurred while updating your timezone.";
+        }
+    }
+
+    // Password
+    if ($old_password == '' && $new_password != '') {
+        $errors[] = "To update your password, you must enter your old one.";
+
+    } 
+        
+    if ($new_password != '') {
+        $correct_password = password_verify($old_password, $_SESSION['hashed_password']);
+
+        if ($correct_password) {
+            // Validate new password
             if (!has_length($new_password, ['min' => 5, 'max' => 20])) {
                 $errors[] = "Password must be between 5 and 20 characters.";
             } elseif (!preg_match('/[A-Z]/', $new_password)) {
@@ -356,15 +362,15 @@ function update_user(): array {
                 $result = update_user_query('password', $hashed_password);
                 if ($result) {
                     $_SESSION['message'] = "Password successfully updated.\n";
+                    $_SESSION['hashed_password'] = $hashed_password;
                 } else {
                     $errors[] = "An error occurred while updating your password.";
                 }
             }
+        } else {
+            $errors[] = "Invalid password";
         }
-
-    } else {
-        $errors[] = "Invalid password";
-    }
+    } 
 
     return $errors;
 }

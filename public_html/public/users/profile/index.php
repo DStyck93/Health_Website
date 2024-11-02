@@ -18,7 +18,6 @@ include(SHARED_PATH . '/header.php');
 <!-- Messages -->
 <p id="message"><?php display_message() ?></p>
 <p><?php echo display_errors($errors); ?></p>
-<p>You must enter your password to confirm the updates.</p>
 
 <!-- Form -->
 <form action="<?php echo url_for('/users/profile/index.php') ?>" method="POST">
@@ -57,13 +56,13 @@ include(SHARED_PATH . '/header.php');
         <input type="password" id="form_input" placeholder="Confirm password" name="confirm_password"/>
     </dd></dl>
     <!-- Submit -->
-    <input type="submit" value="Update Profile" id="edit_user_button"/>
+    <input type="submit" value="Update" id="edit_user_button"/>
 
 </form><br>
 
 <!-- Delete -->
 <form action="<?php echo url_for('/users/profile/delete.php') ?>" method="POST">
-    <input type="submit" value="Delete Profile" id="edit_user_button"/>
+    <input type="submit" value="Delete" id="edit_user_button"/>
 </form>
 
 <?php include(SHARED_PATH . '/footer.php'); ?>

@@ -4,6 +4,7 @@ function login($user): true {
     session_regenerate_id(true);
     $_SESSION['username'] = $user['username'];
     $_SESSION['email'] = $user['email'];
+    $_SESSION['hashed_password'] = $user['password'];
     $_SESSION['weight'] = $user['weight_pounds'] ?? 0;
     $_SESSION['timezone'] = $user['timezone'];
 
@@ -37,8 +38,8 @@ function require_login(): void {
         $user = find_user_by_id($_COOKIE['user_id']);
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
-        $_SESSION['weight'] = $user['weight_pounds'];
         $_SESSION['hashed_password'] = $user['password'];
+        $_SESSION['weight'] = $user['weight_pounds'];
         $_SESSION['timezone'] = $user['timezone'];
     }
 }

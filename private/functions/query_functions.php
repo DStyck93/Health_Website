@@ -202,6 +202,8 @@ function add_food(int $food_id, float $servings): bool {
     return $result;
 }
 
+// TODO: Don't allow negative values OR values >= 10,000.
+// TODO: Allow inserting decimal values AND round to 2 places
 function add_custom_food(array $food): bool {
     global $db;
 

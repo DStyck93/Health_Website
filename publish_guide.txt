@@ -5,4 +5,5 @@ To publish via FastComet:
 4. Upload private.zip & public_html.zip to root directory
 5. Unzip files (replace old ones)
 6. private/db_credentials.php -> swap credentials and remove test environment info
+7. private/initalize.php -> Uncomment $public_dir for production and remove development version
 7. Remove .zip files.

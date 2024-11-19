@@ -34,7 +34,7 @@ include(SHARED_PATH . '/header.php');
         <input type="number" id="form_input" placeholder="<?php echo h($_SESSION['weight']);?>" name="weight"/>
     </dd></dl>
     <!-- Timezone -->
-    <dl><dt id="edit_profile">Timezone (USA)</dt><dd>
+    <dl><dt id="edit_profile">Time Zone (USA)</dt><dd>
         <select name="timezone">
             <option value="America/New_York" <?php if(h($_SESSION['timezone']) == 'America/New_York') echo "selected=\"selected\" ";?>>Eastern</option>
             <option value="America/Chicago" <?php if(h($_SESSION['timezone']) == 'America/Chicago') echo "selected=\"selected\" ";?>>Central</option>

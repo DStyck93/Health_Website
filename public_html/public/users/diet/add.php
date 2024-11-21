@@ -2,8 +2,6 @@
 require_once('../../../../private/initialize.php');
 require_login();
 
-global $errors;
-
 // Search button clicked
 if (is_post_request()) {
     $food_name = $_POST['search'] ?? '';
@@ -41,7 +39,7 @@ include(SHARED_PATH . '/header.php');
 <!-- Search Bar -->
 <form action="<?php echo url_for('users/diet/add.php')?>" method="POST" id="search_bar">
     <label><input name='search' id="search_bar" type="search" placeholder="Lookup Food"/></label>
-    <input id="button" type="submit" value="Search"/>
+    <input id="search_button" type="submit" value="Search"/>
 </form>
 
 <!-- Search Table -->
@@ -87,9 +85,8 @@ include(SHARED_PATH . '/header.php');
                     ?>
                 </td>
                 <td id="table_number">
-                    <form action="<?php echo url_for('/users/diet/serving.php')?>"
-                          method="POST">
-                        <input type="hidden" name="id" value="<?php echo h($food['food_id']); ?>">
+                    <form action="<?php echo url_for('/users/diet/serving.php')?>" method="POST">
+                        <input type="hidden" name="id" value="<?php echo h($food['food_id']); ?>"/>
                         <input type="submit" name="add" value="Add" id="table_button"/>
                     </form>
                 </td>
@@ -98,8 +95,7 @@ include(SHARED_PATH . '/header.php');
 
     </table>
 
-<?php
-    mysqli_free_result($food_set);
+    <?php mysqli_free_result($food_set);
 }
 
 include(SHARED_PATH . '/footer.php');

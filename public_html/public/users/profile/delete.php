@@ -9,10 +9,5 @@ if($result){
     $_SESSION['message'] = 'Unable to delete user';
 }
 
-setcookie('user_id', '', time() - 3600);
-unset($_COOKIE['user_id']);
-
-logout();
-
-redirect_to(url_for('/index.php'));
+redirect_to(url_for('logout.php'));
 ?>

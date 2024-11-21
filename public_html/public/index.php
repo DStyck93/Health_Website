@@ -1,5 +1,3 @@
-<!-- TODO - production version not auto-logging properly -->
-
 <?php
 require_once('../../private/initialize.php');
 

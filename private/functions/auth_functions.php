@@ -1,21 +1,16 @@
 <?php
 function login($user): true {
-    $seconds_in_month = 60 * 60 * 24 * 30;
 
     session_regenerate_id(true);
     $_SESSION['username'] = $user['username'];
     $_SESSION['email'] = $user['email'];
+    $_SESSION['hashed_password'] = $user['password'];
+    $_SESSION['weight'] = $user['weight_pounds'] ?? 0;
+    $_SESSION['timezone'] = $user['timezone'];
 
-    // Params: name, value, expires, path, domain, secure, httponly
-    setcookie(
-        'user_id',
-        $user['user_id'],
-        time() + $seconds_in_month,
-        null,
-        null,
-        true,
-        true
-    );
+    $seconds_in_month = 60 * 60 * 24 * 30;
+    $expiration = time() + $seconds_in_month;
+    setcookie('user_id', $user['user_id'], $expiration, null, null, true, true);
 
     return true;
 }
@@ -25,6 +20,8 @@ function logout(): true {
     unset($_COOKIE['user_id']);
     unset($_SESSION['username']);
     unset($_SESSION['email']);
+    unset($_SESSION['weight']);
+    unset($_SESSION['timezone']);
     session_destroy();
     return true;
 }
@@ -42,6 +39,8 @@ function require_login(): void {
         $_SESSION['username'] = $user['username'];
         $_SESSION['email'] = $user['email'];
         $_SESSION['hashed_password'] = $user['password'];
+        $_SESSION['weight'] = $user['weight_pounds'];
+        $_SESSION['timezone'] = $user['timezone'];
     }
 }
 ?>

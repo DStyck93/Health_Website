@@ -5,11 +5,11 @@ global $errors;
 
 if (!is_post_request()) {redirect_to(url_for('/users/diet/add.php'));}
 
-$id = $_POST["id"] ?? '';
-$food = find_food_by_id($id);
-
 $page_title = 'Diet';
 include(SHARED_PATH . '/header.php');
+
+$id = $_POST["id"] ?? '';
+$food = find_food_by_id($id);
 ?>
 
 <!-- Page Header -->
@@ -39,8 +39,8 @@ include(SHARED_PATH . '/header.php');
     <input type="hidden" name="id" value="<?php echo h($id); ?>">
     <dl>
         <dt id="servings">Servings</dt>
-        <dd><label><input type="range" min='0.5' max='10' step='0.5' oninput="range_value.innerText = this.value"
-                          name="servings" class="slider" value="1"/></label>
+        <dd><input type="range" min='0.5' max='10' step='0.5' oninput="range_value.innerText = this.value"
+                          name="servings" class="slider" value="1"/>
             <p id="range_value">1</p>
         </dd>
     </dl>

@@ -1,5 +1,4 @@
 <!-- TODO - Limit to 50 results per page & add page selection -->
-<!-- TODO - Adjust for timezone conversions -->
 
 <?php
 require_once('../../../../private/initialize.php');
@@ -37,13 +36,12 @@ include(SHARED_PATH . '/header.php');
 echo "</br><p>" . display_message() . "</p>";
 ?>
 
-<!-- Timeframe Selector -->
-<?php include(SHARED_PATH . '/timeframe_selector.php'); ?>
+<!-- Time frame Selector -->
+<?php include(SHARED_PATH . '/timeframe_selector.php'); ?><br>
 
 <!-- Nutrition Numbers -->
-
 <?php if($time_frame =='day' || $time_frame == '') { ?><h2>Daily</h2>
-<?php } else if($time_frame == 'week') { ?><h2>Weekly</h2>
+<?php } elseif ($time_frame == 'week') { ?><h2>Weekly</h2>
 <?php } else { ?><h2>Monthly</h2><?php } ?>
 
 <h3>Calories: <?php echo h($calories) ?></h3>
@@ -51,13 +49,16 @@ echo "</br><p>" . display_message() . "</p>";
 <h4>Fats: <?php echo h($total_nutrition['fat']) ?></h4>
 <h4>Protein: <?php echo h($total_nutrition['protein']) ?></h4>
 
-<!-- Add Food Button -->
-<form action="<?php echo url_for('/users/diet/add.php'); ?>">
-    <input type="submit" value="Add Food" id="button"/>
-</form>
+<hr size=3 color="black">
 
 <!-- User Food Table -->
 <h2 id="table_title">Your Food</h2>
+
+<!-- Add Food Button -->
+<form action="<?php echo url_for('/users/diet/add.php'); ?>">
+    <input type="submit" value="Add Food" id="button"/>
+</form><br>
+
 <?php
 if (!empty($food_set)) { ?>
 
@@ -75,12 +76,7 @@ if (!empty($food_set)) { ?>
 
         <?php foreach ($food_set as $food) { ?>
             <tr>
-                <td>
-                    <?php
-                    $formatted_date = date("m/d H:i", strtotime(h($food['date_added'])));
-                    echo nl2br(h($formatted_date));
-                    ?>
-                </td>
+                <td><?php echo h(($food['date_added'])->format('M j')); ?></td>
                 <td id="long_text"><?php echo h($food['food_name']); ?></td>
                 <td id="table_number"><?php echo calculate_calories($food)?></td>
                 <td id="table_number"><?php echo h($food['carb']); ?></td>
@@ -95,14 +91,16 @@ if (!empty($food_set)) { ?>
                     </form>
                 </td>
             </tr>
-        <?php } ?>
+        <?php 
+        }
+        ?>
 
     </table>
 
     <?php
 
 } else {
-    echo "<p>You have no food added.</p>";
+    echo "<p>You have no food recorded for this time frame.</p>";
 }
 ?>
 
